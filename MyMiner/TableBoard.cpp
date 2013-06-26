@@ -48,17 +48,58 @@ CTableBoard::~CTableBoard(void)
 //Shuffle table board
 bool CTableBoard::ShuffleTableBoard()
 {
-    for(size_t i = 0; i < TABLESIZE; i++)
+    bool bRedoShuffle = false;
+
+    while(1)
     {
-        TableRow arrRow = m_arrTable[i];
-        for(size_t j = 0; j < TABLESIZE; j++)
+        for(size_t i = 0; i < TABLESIZE && !bRedoShuffle; i++)
         {
-            int nGeneratedMarker = rand() % MAX_CELL_MARKER + 1;
+            TableRow arrRow = m_arrTable[i];
+            for(size_t j = 0; j < TABLESIZE && !bRedoShuffle; j++)
+            {
+                int nGeneratedMarker = rand() % MAX_CELL_MARKER + 1;
 
-            //Search if the marker is good(no 3 or more markers identical on the line and row)
+                CTableCell* pCell = arrRow[j];
 
-            //bool bResult = SearchIfMarkerIsSuited(arrRow[j], nGeneratedMarker);
-            arrRow[j]->SetMarker(nGeneratedMarker);
+                bool bMarkerIsGood = false;
+                //Search if the marker is good(no 3 or more markers identical on the line and row)
+                int nCountMarkers = 0;
+                while(!bMarkerIsGood && nCountMarkers <= MAX_CELL_MARKER)
+                {
+                    nCountMarkers++;
+
+                    int nMarkerCountCol = 0;
+                    SearchForMarker(CTableBoard::eSDUp, pCell, nGeneratedMarker, nMarkerCountCol);
+                    SearchForMarker(CTableBoard::eSDDown, pCell, nGeneratedMarker, nMarkerCountCol);
+
+                    int nMarkerCountRow = 0;
+                    SearchForMarker(CTableBoard::eSDLeft, pCell, nGeneratedMarker, nMarkerCountRow);
+                    SearchForMarker(CTableBoard::eSDRight, pCell, nGeneratedMarker, nMarkerCountRow);
+
+                    
+                    bMarkerIsGood = (nMarkerCountRow <= 1) && (nMarkerCountCol <= 1);
+                    if(!bMarkerIsGood)
+                    {
+                        nGeneratedMarker++;
+                        if(nGeneratedMarker > MAX_CELL_MARKER)
+                        {
+                            nGeneratedMarker = 1;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        arrRow[j]->SetMarker(nGeneratedMarker);
+                    }
+                }
+
+                bRedoShuffle = !bMarkerIsGood && (nCountMarkers > MAX_CELL_MARKER);
+            }
+        }
+
+        if(!bRedoShuffle)
+        {
+            break;
         }
     }
 
@@ -78,27 +119,6 @@ void CTableBoard::PrintTableBoard()
 
         std::cout << std::endl;
     }
-}
-
-//See if the marker is not connected in a 3 or more cells on rows and columns
-bool CTableBoard::SearchIfMarkerIsSuited(CTableCell* pCell, int nMarker)
-{
-    if(!pCell || nMarker == 0 || nMarker > MAX_CELL_MARKER)
-        return false;
-
-    CTableCell* pCellUp = pCell->GetCellUp();
-    if(pCellUp)
-    {
-        if(pCellUp->GetMarker() != nMarker)
-            return false;
-        
-        SearchIfMarkerIsSuited(pCellUp, nMarker);
-    }
-
-    CTableCell* pCellDown = pCell->GetCellDown();
-
-
-    return false;
 }
 
 //Search for the same marker in the specified direction
@@ -141,7 +161,7 @@ bool CTableBoard::LoadFromTemplate(const char* strTemplate)
         static std::ctype_base::mask const* get_table()
         {
             typedef std::ctype<char> cctype;
-            static const cctype::mask *const_rc= cctype::classic_table();
+            static const cctype::mask *const_rc = cctype::classic_table();
 
             static cctype::mask rc[cctype::table_size];
             std::memcpy(rc, const_rc, cctype::table_size * sizeof(cctype::mask));

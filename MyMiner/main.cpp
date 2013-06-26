@@ -66,6 +66,19 @@ bool ExecuteTests()
             assert(pCell);
             assert(pCell->m_nMarker > 0);
             assert(pCell->m_nMarker <= MAX_CELL_MARKER);
+
+            int nCountMarkerCol = 0;
+            tableboard.SearchForMarker(CTableBoard::eSDUp, pCell, pCell->GetMarker(), nCountMarkerCol);
+            tableboard.SearchForMarker(CTableBoard::eSDDown, pCell, pCell->GetMarker(), nCountMarkerCol);
+
+            assert(nCountMarkerCol < 2);
+
+            int nCountMarkerRow = 0;
+            tableboard.SearchForMarker(CTableBoard::eSDLeft, pCell, pCell->GetMarker(), nCountMarkerRow);
+            tableboard.SearchForMarker(CTableBoard::eSDRight, pCell, pCell->GetMarker(), nCountMarkerRow);
+
+            assert(nCountMarkerRow < 2);
+
         }
     }
 

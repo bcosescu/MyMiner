@@ -20,7 +20,6 @@ public:
     bool        ShuffleTableBoard       ();
     void        PrintTableBoard         ();
 
-    bool        SearchIfMarkerIsSuited  (CTableCell* pCell, int nMarker);
     void        SearchForMarker         (eSearchDirection eDirection, CTableCell* pCell, int nMarker, int& nCountMarker);
 
     bool        LoadFromTemplate        (const char* strTemplate);
