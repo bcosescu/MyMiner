@@ -8,6 +8,9 @@ class CTableBoard
 {
     typedef std::vector<CTableCell*>    TableRow;
     typedef std::vector<TableRow>       TableBoard;
+
+    enum eSearchDirection { eSDUp, eSDDown, eSDLeft, eSDRight };
+
 public:
 
     friend bool ExecuteTests();
@@ -16,6 +19,11 @@ public:
 
     bool        ShuffleTableBoard       ();
     void        PrintTableBoard         ();
+
+    bool        SearchIfMarkerIsSuited  (CTableCell* pCell, int nMarker);
+    void        SearchForMarker         (eSearchDirection eDirection, CTableCell* pCell, int nMarker, int& nCountMarker);
+
+    bool        LoadFromTemplate        (const char* strTemplate);
 
     //main table
     TableBoard m_arrTable;

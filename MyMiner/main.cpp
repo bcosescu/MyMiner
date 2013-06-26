@@ -7,6 +7,7 @@
 #include <assert.h> 
 #include <stdlib.h>
 #include <time.h>
+#include <iostream>
 
 bool ExecuteTests();
 
@@ -70,5 +71,43 @@ bool ExecuteTests()
 
     tableboard.PrintTableBoard();
 
+    //Redo table board
+    tableboard.LoadFromTemplate("5 2 4 2 4 3 1 4,\
+                                 1 2 2 5 3 2 2 2,\
+                                 3 3 5 2 4 4 2 5,\
+                                 3 3 3 5 3 2 4 3,\
+                                 1 2 1 1 3 5 2 1,\
+                                 3 3 3 3 3 2 1 1,\
+                                 4 4 3 4 5 5 3 1,\
+                                 3 5 4 1 5 5 2 1");
+
+    //Verify if element 5,4 has the required marker count verticaly and horizontaly
+    CTableCell* pCell = tableboard.m_arrTable[5][4];
+
+    int nCountMarkerCol = 0;
+    tableboard.SearchForMarker(CTableBoard::eSDUp, pCell, pCell->GetMarker(), nCountMarkerCol);
+    tableboard.SearchForMarker(CTableBoard::eSDDown, pCell, pCell->GetMarker(), nCountMarkerCol);
+
+    assert(nCountMarkerCol == 2);
+
+    int nCountMarkerRow = 0;
+    tableboard.SearchForMarker(CTableBoard::eSDLeft, pCell, pCell->GetMarker(), nCountMarkerRow);
+    tableboard.SearchForMarker(CTableBoard::eSDRight, pCell, pCell->GetMarker(), nCountMarkerRow);
+
+    assert(nCountMarkerRow == 4);
+
+    //Verify element 7,7
+    pCell = tableboard.m_arrTable[7][7];
+    nCountMarkerCol = 0;
+    tableboard.SearchForMarker(CTableBoard::eSDUp, pCell, pCell->GetMarker(), nCountMarkerCol);
+    tableboard.SearchForMarker(CTableBoard::eSDDown, pCell, pCell->GetMarker(), nCountMarkerCol);
+
+    assert(nCountMarkerCol == 3);
+
+    nCountMarkerRow = 0;
+    tableboard.SearchForMarker(CTableBoard::eSDLeft, pCell, pCell->GetMarker(), nCountMarkerRow);
+    tableboard.SearchForMarker(CTableBoard::eSDRight, pCell, pCell->GetMarker(), nCountMarkerRow);
+
+    assert(nCountMarkerRow == 0);
     return true;
 }
