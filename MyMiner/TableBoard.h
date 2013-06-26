@@ -14,7 +14,8 @@ public:
     CTableBoard(void);
     ~CTableBoard(void);
 
-    bool        GenerateTableBoard      ();
+    bool        ShuffleTableBoard       ();
+    void        PrintTableBoard         ();
 
     //main table
     TableBoard m_arrTable;

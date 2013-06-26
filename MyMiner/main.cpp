@@ -23,8 +23,6 @@ bool ExecuteTests()
 {
     //TESTS
     CTableBoard tableboard;
-    tableboard.GenerateTableBoard();
-
     //Verify size
     assert(tableboard.m_arrTable.size() == TABLESIZE);
     for(size_t i = 0; i < tableboard.m_arrTable.size(); i++)
@@ -32,7 +30,32 @@ bool ExecuteTests()
         assert(tableboard.m_arrTable[i].size() == TABLESIZE);
     }
 
-    //Verify cells
+    //Verify number of links between cells
+    for(size_t i = 0; i < tableboard.m_arrTable.size(); i++)
+    {
+        CTableBoard::TableRow arrRow = tableboard.m_arrTable[i];
+        for(size_t j = 0; j < arrRow.size(); j++)
+        {
+            int nCountLinks = 0;
+            if(arrRow[j]->GetCellUp() != NULL)
+                nCountLinks++;
+
+            if(arrRow[j]->GetCellDown() != NULL)
+                nCountLinks++;
+
+            if(arrRow[j]->GetCellRight() != NULL)
+                nCountLinks++;
+
+            if(arrRow[j]->GetCellLeft() != NULL)
+                nCountLinks++;
+
+            assert(nCountLinks > 1);
+        }
+    }
+
+    tableboard.ShuffleTableBoard();
+
+    //Verify markers in table cells
     for(size_t i = 0; i < tableboard.m_arrTable.size(); i++)
     {
         CTableBoard::TableRow arrRow = tableboard.m_arrTable[i];
@@ -44,6 +67,8 @@ bool ExecuteTests()
             assert(pCell->m_nMarker <= MAX_CELL_MARKER);
         }
     }
+
+    tableboard.PrintTableBoard();
 
     return true;
 }
