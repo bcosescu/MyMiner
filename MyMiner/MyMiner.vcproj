@@ -211,6 +211,34 @@
 				>
 			</File>
 		</Filter>
+		<Filter
+			Name="Resources"
+			>
+			<File
+				RelativePath=".\Resources\BackGround.jpg"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Blue.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Green.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Purple.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Red.png"
+				>
+			</File>
+			<File
+				RelativePath=".\Resources\Yellow.png"
+				>
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
