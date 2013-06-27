@@ -3,6 +3,26 @@
 #include <iostream>
 #include <assert.h>
 #include <sstream>
+#include <map>
+#include <algorithm>
+#include <conio.h>
+
+template<typename tPair>
+struct second_t 
+{ 
+    typename tPair::second_type operator()( const typename tPair& p ) const { return p.second; }
+};
+
+template<typename tMap> 
+second_t<typename tMap::value_type> second(const tMap& m)
+{ 
+    return second_t<typename tMap::value_type>(); 
+}
+
+void EmptyCell(CTableCell* pCell)
+{
+    pCell->ResetMarker();
+}
 
 CTableBoard::CTableBoard(void)
 {
@@ -68,16 +88,16 @@ bool CTableBoard::ShuffleTableBoard()
                 {
                     nCountMarkers++;
 
-                    int nMarkerCountCol = 0;
-                    SearchForMarker(CTableBoard::eSDUp, pCell, nGeneratedMarker, nMarkerCountCol);
-                    SearchForMarker(CTableBoard::eSDDown, pCell, nGeneratedMarker, nMarkerCountCol);
+                    std::vector<CTableCell*> arrCellsVertically;
+                    SearchForMarker(CTableBoard::eSDUp, pCell, nGeneratedMarker, arrCellsVertically);
+                    SearchForMarker(CTableBoard::eSDDown, pCell, nGeneratedMarker, arrCellsVertically);
 
-                    int nMarkerCountRow = 0;
-                    SearchForMarker(CTableBoard::eSDLeft, pCell, nGeneratedMarker, nMarkerCountRow);
-                    SearchForMarker(CTableBoard::eSDRight, pCell, nGeneratedMarker, nMarkerCountRow);
+                    std::vector<CTableCell*> arrCellsHorizontaly;
+                    SearchForMarker(CTableBoard::eSDLeft, pCell, nGeneratedMarker, arrCellsHorizontaly);
+                    SearchForMarker(CTableBoard::eSDRight, pCell, nGeneratedMarker, arrCellsHorizontaly);
 
                     
-                    bMarkerIsGood = (nMarkerCountRow <= 1) && (nMarkerCountCol <= 1);
+                    bMarkerIsGood = (arrCellsVertically.size() <= 1) && (arrCellsHorizontaly.size() <= 1);
                     if(!bMarkerIsGood)
                     {
                         nGeneratedMarker++;
@@ -121,8 +141,58 @@ void CTableBoard::PrintTableBoard()
     }
 }
 
+//Verify and collapse columns if cells are empty
+void CTableBoard::CollapseColumns()
+{
+    for(size_t j = 0; j < TABLESIZE; j++)
+    {
+        for(size_t i = TABLESIZE - 1; i-- > 0;)
+        {
+            CTableCell* pCell = m_arrTable[i][j];
+            while(pCell->GetCellDown() && pCell->GetCellDown()->IsEmpty())
+            {
+                pCell->Swap(pCell->GetCellDown());
+                pCell = pCell->GetCellDown();
+            }
+        }
+    }
+}
+
+//Collapse columns starting from a vector of empty cells
+CTableBoard::TableCells CTableBoard::CollapseColumns(TableCells arrEmptyCells)
+{
+    TableCells newEmptyCells;
+    std::map<CTableCell*, CTableCell*> mapNewEmptyCells;
+
+    while(arrEmptyCells.size())
+    {
+        CTableCell* pCell = arrEmptyCells.back();
+        CTableCell* pStartCell = pCell;
+        
+        bool bAllCellsAreEmpty = true;
+        while(pCell->GetCellUp() && pCell->IsEmpty())
+        {
+            if(!pCell->GetCellUp()->IsEmpty())
+            {
+                mapNewEmptyCells.erase(pCell);
+                pCell->Swap(pCell->GetCellUp());
+                mapNewEmptyCells.insert(std::pair<CTableCell*, CTableCell*>(pCell->GetCellUp(), pCell->GetCellUp()));
+                bAllCellsAreEmpty = false;
+            }
+
+            pCell = pCell->GetCellUp();
+        }
+    
+        if(!pStartCell->IsEmpty() || bAllCellsAreEmpty)
+            arrEmptyCells.pop_back();
+    }
+
+    std::transform(mapNewEmptyCells.begin(), mapNewEmptyCells.end(), std::back_inserter(newEmptyCells), second(mapNewEmptyCells));
+    return newEmptyCells;
+}
+
 //Search for the same marker in the specified direction
-void CTableBoard::SearchForMarker(eSearchDirection eDirection, CTableCell* pCell, int nMarker, int& nCountMarker)
+void CTableBoard::SearchForMarker(eSearchDirection eDirection, CTableCell* pCell, int nMarker, std::vector<CTableCell*>& arrCells)
 {
     if(!pCell || nMarker == 0 || nMarker > MAX_CELL_MARKER)
         return;
@@ -147,11 +217,81 @@ void CTableBoard::SearchForMarker(eSearchDirection eDirection, CTableCell* pCell
         if(pNextCell->GetMarker() != nMarker)
             return;
 
-        SearchForMarker(eDirection, pNextCell, nMarker, ++nCountMarker);
+        arrCells.push_back(pNextCell);
+        SearchForMarker(eDirection, pNextCell, nMarker, arrCells);
     }
 }
 
-//Fill cell with predifine markers
+//Search the whole table board for matching lines and columns
+void CTableBoard::MatchTableBoard()
+{
+    while(1)
+    {
+        bool bCollapsedColumns = false;
+
+        for(size_t i = 0; i < TABLESIZE; i++)
+        {
+            for(size_t j = 0; j < TABLESIZE; j++)
+            {
+                CTableCell* pCell = m_arrTable[i][j];
+
+                if(pCell->IsEmpty())
+                    continue;
+
+                TableCells arrCells;
+                CTableCell* pStartingCell = NULL;
+                IdentifyLargestCellCount(pCell, arrCells, pStartingCell);
+
+                arrCells.push_back(pStartingCell);
+
+                if(arrCells.size() > 1)
+                {
+                    std::for_each(arrCells.begin(), arrCells.end(), &EmptyCell);
+                    bCollapsedColumns = true;
+                    CollapseColumns(arrCells);
+                }
+            }
+        }
+
+        if(!bCollapsedColumns)
+            break;
+    }
+}
+
+//Recursive function to detect the largest possibility of matching cells
+void CTableBoard::IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCells, CTableCell*& pStartCell)
+{
+    if(!pCell)
+        return;
+
+    TableCells arrCellsCol;
+    SearchForMarker(eSDUp, pCell, pCell->GetMarker(), arrCellsCol);
+    SearchForMarker(eSDDown, pCell, pCell->GetMarker(), arrCellsCol);
+
+    TableCells arrCellsLine;
+    SearchForMarker(eSDLeft, pCell, pCell->GetMarker(), arrCellsLine);
+    SearchForMarker(eSDRight, pCell, pCell->GetMarker(), arrCellsLine);
+
+    TableCells arrResultingCells;
+    if(arrCellsCol.size() > 1)
+        arrResultingCells.insert(arrResultingCells.end(), arrCellsCol.begin(), arrCellsCol.end());
+
+    if(arrCellsLine.size() > 1)
+        arrResultingCells.insert(arrResultingCells.end(), arrCellsLine.begin(), arrCellsLine.end());
+
+    if(arrResultingCells.size() > arrCells.size())
+    {
+        arrCells = arrResultingCells;
+        pStartCell = pCell;
+
+        for(size_t i = 0; i < arrResultingCells.size(); i++)
+        {
+            IdentifyLargestCellCount(arrResultingCells[i], arrCells, pStartCell);
+        }
+    }
+}
+
+//Fill cell with predefine markers
 bool CTableBoard::LoadFromTemplate(const char* strTemplate)
 {
     struct tokens: std::ctype<char> 

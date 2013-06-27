@@ -22,3 +22,13 @@ CTableCell::CTableCell(int nMarker)
 CTableCell::~CTableCell(void)
 {
 }
+
+void CTableCell::Swap(CTableCell* pCell)
+{
+    if(!pCell)
+        return;
+
+    int nTmpMarker = m_nMarker;
+    m_nMarker = pCell->GetMarker();
+    pCell->SetMarker(nTmpMarker);
+}
