@@ -18,7 +18,6 @@ public:
     CTableBoard(void);
     ~CTableBoard(void);
 
-    bool        ShuffleTableBoard       ();
     void        PrintTableBoard         ();
     void        CollapseColumns         ();
     TableCells  CollapseColumns         (TableCells arrEmptyCells);
@@ -26,10 +25,14 @@ public:
     void        SearchForMarker         (eSearchDirection eDirection, CTableCell* pCell, int nMarker, std::vector<CTableCell*>& arrCells);
     void        MatchTableBoard         ();
 
-    void        IdentifyLargestCellCount   (CTableCell* pCell, TableCells& arrCells, CTableCell*& pStartCell);
+    void        IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCells, CTableCell*& pStartCell);
+    void        FillWithRandomMarker    (CTableCell* pCell);
+    void        ClearTableBoard         ();
 
     bool        LoadFromTemplate        (const char* strTemplate);
 
+private:
+
     //main table
-    TableBoard m_arrTable;
+    TableBoard  m_arrTable;
 };

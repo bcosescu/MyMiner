@@ -57,7 +57,8 @@ bool ExecuteTests()
     }
 
     std::cout << "Test 2 Pass\n";
-    tableboard.ShuffleTableBoard();
+    tableboard.ClearTableBoard();
+    tableboard.FillWithRandomMarker(tableboard.m_arrTable[0][0]);
 
     //Verify markers in table cells
     for(size_t i = 0; i < tableboard.m_arrTable.size(); i++)
@@ -186,13 +187,13 @@ bool ExecuteTests()
 
     //Redo table board
     tableboard.LoadFromTemplate("5 2 4 2 4 3 1 4,\
-                                1 2 2 5 3 2 2 2,\
-                                3 3 5 2 4 4 2 5,\
-                                3 3 3 5 3 2 4 3,\
-                                1 2 1 1 3 5 2 1,\
-                                3 3 3 3 3 2 1 1,\
-                                4 4 3 4 5 5 3 1,\
-                                3 5 4 1 5 5 2 1");
+                                 1 2 2 5 3 2 2 2,\
+                                 3 3 5 2 4 4 2 5,\
+                                 3 3 3 5 3 2 4 3,\
+                                 1 2 1 1 3 5 2 1,\
+                                 3 3 3 3 3 2 1 1,\
+                                 4 4 3 4 5 5 3 1,\
+                                 3 5 4 1 5 5 2 1");
 
     std::cout << "Before:\n";
     tableboard.PrintTableBoard();
@@ -211,12 +212,35 @@ bool ExecuteTests()
                                  4 4 3 4 5 5 3 1,\
                                  3 5 4 1 5 5 2 1");
 
-    std::cout << "Before:\n";
-    tableboard.PrintTableBoard();
-    tableboard.MatchTableBoard();
-    std::cout << "After:\n";
-    tableboard.PrintTableBoard();
+    pCell = tableboard.m_arrTable[0][2];
+    arrCells.clear();
+    CTableCell* pStartsFrom = NULL;
+    tableboard.IdentifyLargestCellCount(pCell, arrCells, pStartsFrom);
+
+    assert(arrCells.size() == 9);
+    assert(pStartsFrom == tableboard.m_arrTable[1][3]);
     std::cout << "Test 9 Pass\n";
+
+    tableboard.ClearTableBoard();
+    tableboard.FillWithRandomMarker(tableboard.m_arrTable[0][0]);
+    tableboard.PrintTableBoard();
+    std::cout << "Test 10 Pass\n";
+
+    //Redo table board
+    tableboard.LoadFromTemplate("0 0 0 0 0 0 0 4,\
+                                 0 0 0 0 4 3 1 2,\
+                                 0 0 1 0 4 4 2 5,\
+                                 0 0 1 0 3 2 4 3,\
+                                 5 0 3 2 1 1 2 1,\
+                                 3 2 2 3 3 2 1 2,\
+                                 4 4 3 4 5 5 3 1,\
+                                 3 5 4 1 5 5 2 1");
+
+    tableboard.FillWithRandomMarker(tableboard.m_arrTable[0][0]);
+    tableboard.PrintTableBoard();
+    std::cout << "Test 11 Pass\n";
+
+
 
     return true;
 }

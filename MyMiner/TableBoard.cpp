@@ -65,67 +65,6 @@ CTableBoard::~CTableBoard(void)
     }
 }
 
-//Shuffle table board
-bool CTableBoard::ShuffleTableBoard()
-{
-    bool bRedoShuffle = false;
-
-    while(1)
-    {
-        for(size_t i = 0; i < TABLESIZE && !bRedoShuffle; i++)
-        {
-            TableRow arrRow = m_arrTable[i];
-            for(size_t j = 0; j < TABLESIZE && !bRedoShuffle; j++)
-            {
-                int nGeneratedMarker = rand() % MAX_CELL_MARKER + 1;
-
-                CTableCell* pCell = arrRow[j];
-
-                bool bMarkerIsGood = false;
-                //Search if the marker is good(no 3 or more markers identical on the line and row)
-                int nCountMarkers = 0;
-                while(!bMarkerIsGood && nCountMarkers <= MAX_CELL_MARKER)
-                {
-                    nCountMarkers++;
-
-                    std::vector<CTableCell*> arrCellsVertically;
-                    SearchForMarker(CTableBoard::eSDUp, pCell, nGeneratedMarker, arrCellsVertically);
-                    SearchForMarker(CTableBoard::eSDDown, pCell, nGeneratedMarker, arrCellsVertically);
-
-                    std::vector<CTableCell*> arrCellsHorizontaly;
-                    SearchForMarker(CTableBoard::eSDLeft, pCell, nGeneratedMarker, arrCellsHorizontaly);
-                    SearchForMarker(CTableBoard::eSDRight, pCell, nGeneratedMarker, arrCellsHorizontaly);
-
-                    
-                    bMarkerIsGood = (arrCellsVertically.size() <= 1) && (arrCellsHorizontaly.size() <= 1);
-                    if(!bMarkerIsGood)
-                    {
-                        nGeneratedMarker++;
-                        if(nGeneratedMarker > MAX_CELL_MARKER)
-                        {
-                            nGeneratedMarker = 1;
-                            continue;
-                        }
-                    }
-                    else
-                    {
-                        arrRow[j]->SetMarker(nGeneratedMarker);
-                    }
-                }
-
-                bRedoShuffle = !bMarkerIsGood && (nCountMarkers > MAX_CELL_MARKER);
-            }
-        }
-
-        if(!bRedoShuffle)
-        {
-            break;
-        }
-    }
-
-    return true;
-}
-
 //View table board - debug
 void CTableBoard::PrintTableBoard()
 {
@@ -287,6 +226,49 @@ void CTableBoard::IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCel
         for(size_t i = 0; i < arrResultingCells.size(); i++)
         {
             IdentifyLargestCellCount(arrResultingCells[i], arrCells, pStartCell);
+        }
+    }
+}
+
+//Given a certain empty cell fill all neghibours
+void CTableBoard::FillWithRandomMarker(CTableCell* pCell)
+{
+    if(!pCell || !pCell->IsEmpty())
+        return;
+
+    int nGeneratedMarker = rand() % MAX_CELL_MARKER + 1;
+
+    TableCells arrCellsVertically;
+    SearchForMarker(eSDUp, pCell, nGeneratedMarker, arrCellsVertically);
+    SearchForMarker(eSDDown, pCell, nGeneratedMarker, arrCellsVertically);
+
+    TableCells arrCellsHorizontaly;
+    SearchForMarker(eSDLeft, pCell, nGeneratedMarker, arrCellsHorizontaly);
+    SearchForMarker(eSDRight, pCell, nGeneratedMarker, arrCellsHorizontaly);
+    
+    bool bMarkerIsGood = (arrCellsVertically.size() <= 1) && (arrCellsHorizontaly.size() <= 1);
+    if(bMarkerIsGood)
+    {
+        pCell->SetMarker(nGeneratedMarker);
+        FillWithRandomMarker(pCell->GetCellUp());
+        FillWithRandomMarker(pCell->GetCellDown());
+        FillWithRandomMarker(pCell->GetCellLeft());
+        FillWithRandomMarker(pCell->GetCellRight());
+    }
+    else
+    {
+        FillWithRandomMarker(pCell);
+    }
+}
+
+//Clear all markers
+void CTableBoard::ClearTableBoard()
+{
+    for(size_t i = 0; i < TABLESIZE; i++)
+    {
+        for(size_t j = 0; j < TABLESIZE; j++)
+        {
+            m_arrTable[i][j]->ResetMarker();
         }
     }
 }
