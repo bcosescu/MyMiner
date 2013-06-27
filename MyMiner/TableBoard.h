@@ -14,7 +14,8 @@ class CTableBoard
 
 public:
 
-    friend bool ExecuteTests();
+    friend class CAutomatedTests;
+
     CTableBoard(void);
     ~CTableBoard(void);
 

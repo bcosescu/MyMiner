@@ -4,7 +4,7 @@
 class CTableCell
 {
 public:
-    friend bool ExecuteTests();
+    friend class CAutomatedTests;
 
     CTableCell();
     CTableCell(int nMarker);
