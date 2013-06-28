@@ -187,7 +187,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\MainWindow.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\TableBoard.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TableBoardRender.cpp"
 				>
 			</File>
 			<File
@@ -238,6 +246,18 @@
 			</File>
 			<File
 				RelativePath=".\Resources\Yellow.png"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="GUI"
+			>
+			<File
+				RelativePath=".\MainWindow.h"
+				>
+			</File>
+			<File
+				RelativePath=".\TableBoardRender.h"
 				>
 			</File>
 		</Filter>
