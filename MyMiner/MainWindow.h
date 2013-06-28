@@ -4,10 +4,11 @@
 class CMainWindow
 {
 public:
-    CMainWindow(void);
+    CMainWindow(CTableBoard& tableboard);
     ~CMainWindow(void);
 
     bool                Initialize      ();
+    bool                UnInitialize    ();
     bool                GameLoop        ();
 
 private:

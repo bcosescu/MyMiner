@@ -58,6 +58,16 @@ bool CGemsResources::Initialize()
     return true;
 }
 
+bool CGemsResources::UnInitialize()
+{
+
+    for(MAPRESOURCES::iterator it = m_mapImgResources.begin(); it != m_mapImgResources.end(); it++)
+    {
+        SDL_FreeSurface(it->second);
+    }
+    return true;
+}
+
 SDL_Surface* CGemsResources::ResourceFor(CGemsResources::eGemResource resource)
 {
     MAPRESOURCES::iterator it = m_mapImgResources.find(resource);

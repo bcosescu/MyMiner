@@ -3,7 +3,8 @@
 #include <iostream>
 #include "GemsResources.h"
 
-CMainWindow::CMainWindow(void)
+CMainWindow::CMainWindow(CTableBoard& tableboard)
+: m_TableBoardRender(tableboard)
 {
     SDL_WM_SetCaption("My Miner", NULL);
     m_pWindow = NULL;
@@ -25,6 +26,11 @@ bool CMainWindow::Initialize()
     }
 
     return CGemsResources::GetInstance().Initialize();
+}
+
+bool CMainWindow::UnInitialize()
+{
+    return CGemsResources::GetInstance().UnInitialize();
 }
 
 //Game loop...where the magic happens

@@ -1,8 +1,7 @@
 #pragma once
 #include "TableCell.h"
 #include <vector>
-
-#define TABLESIZE 8
+#include "Defines.h"
 
 class CTableBoard
 {
@@ -19,6 +18,7 @@ public:
     CTableBoard(void);
     ~CTableBoard(void);
 
+    CTableCell* GetCell                 (int i, int j) { return m_arrTable[i][j];}
     void        PrintTableBoard         ();
     void        CollapseColumns         ();
     TableCells  CollapseColumns         (TableCells arrEmptyCells);
@@ -28,6 +28,7 @@ public:
 
     void        IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCells, CTableCell*& pStartCell);
     void        FillWithRandomMarker    (CTableCell* pCell);
+    void        FillWithRandomMarker    ();
     void        ClearTableBoard         ();
 
     bool        LoadFromTemplate        (const char* strTemplate);

@@ -7,7 +7,7 @@ class CGemsResources
 {
 public:
 
-    enum eGemResource { eGMRed, eGMYellow, eGMPurple, eGMGreen, eGMBlue};
+    enum eGemResource { eGMRed = 1, eGMYellow, eGMPurple, eGMGreen, eGMBlue};
 
 private:
 
@@ -21,6 +21,7 @@ public:
 
     static CGemsResources&      GetInstance () { static CGemsResources instance; return instance; }
     bool                        Initialize  ();
+    bool                        UnInitialize();
     SDL_Surface*                ResourceFor (eGemResource resource);
     
 private:

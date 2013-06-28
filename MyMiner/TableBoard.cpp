@@ -261,6 +261,13 @@ void CTableBoard::FillWithRandomMarker(CTableCell* pCell)
     }
 }
 
+//Fill tableboard starting with the first cell
+void CTableBoard::FillWithRandomMarker()
+{
+    FillWithRandomMarker(m_arrTable[0][0]);
+}
+
+
 //Clear all markers
 void CTableBoard::ClearTableBoard()
 {
