@@ -45,6 +45,11 @@ bool CMainWindow::GameLoop()
         {
             switch(event.type)
             {
+                case SDL_MOUSEBUTTONDOWN:
+                {
+                    HandleMouse(event.button);
+                    break;
+                }
                 case SDL_KEYDOWN:
                 {
                     HandleKey(event.key);
@@ -85,5 +90,5 @@ bool CMainWindow::HandleKey(const SDL_KeyboardEvent& keyEvent)
 //Handle mouse inputs
 bool CMainWindow::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
 {
-    return false;
+    return m_TableBoardRender.HandleMouse(mouseEvent);
 }

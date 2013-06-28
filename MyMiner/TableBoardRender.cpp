@@ -22,6 +22,7 @@ CTableBoardRender::CTableBoardRender(CTableBoard& tableboard)
     m_rcMineEntrance.w = TABLE_RENDER_SIZE;
     m_rcMineEntrance.h = TABLE_RENDER_SIZE;
 
+    m_pSelectedCell = NULL;
     GenerateCellRenders();
 }
 
@@ -54,6 +55,29 @@ bool CTableBoardRender::Render(SDL_Surface* pSurface)
     return false;
 }
 
+bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
+{
+    if(mouseEvent.button != SDL_BUTTON_LEFT)
+        return true;
+
+    if(!PointInRect(mouseEvent.x, mouseEvent.y, m_rcMineEntrance))
+        return true;
+
+    for(size_t i = 0; i < m_CellsRender.size(); i++)
+    {
+        CTableCellRender* pCellRender = m_CellsRender[i];
+        if(pCellRender->PointInCell(mouseEvent.x, mouseEvent.y))
+        {
+            if(m_pSelectedCell)
+                m_pSelectedCell->SetSelected(false);
+
+            m_pSelectedCell = pCellRender;
+            m_pSelectedCell->SetSelected(true);
+        }
+    }
+
+    return true;
+}
 
 void CTableBoardRender::GenerateCellRenders()
 {
@@ -63,8 +87,13 @@ void CTableBoardRender::GenerateCellRenders()
     {
         for(int j = 0; j < TABLESIZE; j++)
         {
-            CTableCellRender* pCellRender = new CTableCellRender(m_rcMineEntrance.x + i * nCellRederWidth, m_rcMineEntrance.y + j * nCellRederWidth, nCellRederWidth, m_TableBoard.GetCell(i,j));
+            CTableCellRender* pCellRender = new CTableCellRender(m_rcMineEntrance.x + j * nCellRederWidth, m_rcMineEntrance.y + i * nCellRederWidth, nCellRederWidth, m_TableBoard.GetCell(i, j));
             m_CellsRender.push_back(pCellRender);
         }
     }
+}
+
+bool CTableBoardRender::PointInRect(int x, int y, const SDL_Rect& rc) const
+{
+    return (x >= rc.x) && (x < rc.x + rc.w) && (y >= rc.y) && (y < rc.y + rc.h);
 }

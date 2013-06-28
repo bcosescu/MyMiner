@@ -20,14 +20,18 @@ public:
 
     bool                Render                  (SDL_Surface* pSurface);
 
+    bool                HandleMouse             (const SDL_MouseButtonEvent& mouseEvent);
+
 private:
 
     void                GenerateCellRenders     ();
+    bool                PointInRect             (int x, int y, const SDL_Rect& rc) const;
 
 
     CTableBoard&        m_TableBoard;
     SDL_Surface*        m_pBackGroundImg;
     SDL_Rect            m_rcMineEntrance;
+    CTableCellRender*   m_pSelectedCell;
 
     TableCellRenders    m_CellsRender;
 };
