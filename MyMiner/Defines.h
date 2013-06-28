@@ -1,5 +1,6 @@
 #pragma once
 
+#define MAX_CELL_MARKER     5
 #define TABLESIZE           8
 #define TABLE_RENDER_SIZE   320
 

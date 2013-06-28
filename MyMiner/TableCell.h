@@ -1,6 +1,5 @@
 #pragma once
 
-#define MAX_CELL_MARKER 5
 class CTableCell
 {
 public:
@@ -24,7 +23,8 @@ public:
     CTableCell*         GetCellRight    () {return m_pCellRight;}
     void                SetCellRight    (CTableCell* pCell) { m_pCellRight = pCell; }
 
-    void                Swap            (CTableCell* pCell);       
+    bool                Swap            (CTableCell* pCell);
+    bool                IsNeighbour     (CTableCell* pCell);
 
 private:
 

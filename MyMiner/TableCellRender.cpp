@@ -78,3 +78,21 @@ bool CTableCellRender::PointInCell(Uint16 nX, Uint16 nY) const
     return (nX >= m_nX) && (nX < m_nX + m_nSize) && (nY >= m_nY) && (nY < m_nY + m_nSize);
 }
 
+bool CTableCellRender::TryToSwap(CTableCellRender* pCellRender)
+{
+
+    if(!m_pCell)
+        return false;
+    
+    CTableCell* pTheOtherCell = pCellRender->GetCell();
+    if(!m_pCell->IsNeighbour(pTheOtherCell))
+        return false;
+
+    if(m_pCell->IsEmpty() || pTheOtherCell->IsEmpty())
+        return false;
+
+    if(m_pCell->GetMarker() == pTheOtherCell->GetMarker())
+        return true;
+
+    return m_pCell->Swap(pTheOtherCell);
+}

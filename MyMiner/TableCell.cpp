@@ -23,12 +23,25 @@ CTableCell::~CTableCell(void)
 {
 }
 
-void CTableCell::Swap(CTableCell* pCell)
+bool CTableCell::IsNeighbour(CTableCell* pCell)
 {
     if(!pCell)
-        return;
+        return false;
+
+    return (m_pCellDown == pCell) ||
+           (m_pCellUp == pCell) ||
+           (m_pCellLeft == pCell) ||
+           (m_pCellRight == pCell);
+}
+
+bool CTableCell::Swap(CTableCell* pCell)
+{
+    if(!pCell)
+        return false;
 
     int nTmpMarker = m_nMarker;
     m_nMarker = pCell->GetMarker();
     pCell->SetMarker(nTmpMarker);
+
+    return true;
 }

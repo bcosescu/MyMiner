@@ -6,6 +6,7 @@ class CTableCell;
 class CTableCellRender
 {
 public:
+
     CTableCellRender(Uint16 nX, Uint16 nY, Uint16 nSize, CTableCell* pCell);
     ~CTableCellRender(void);
 
@@ -13,7 +14,11 @@ public:
     bool        PointInCell     (Uint16 nX, Uint16 nY) const;
 
     void        SetSelected     (bool bSelected) {m_bSelected = bSelected;}
-    bool        IsSelected      () const {return m_bSelected;}        
+    bool        IsSelected      () const {return m_bSelected;}
+
+    bool        TryToSwap       (CTableCellRender* pCellRender);
+
+    CTableCell* GetCell         () {return m_pCell;}
 
 private:
 

@@ -61,18 +61,39 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
         return true;
 
     if(!PointInRect(mouseEvent.x, mouseEvent.y, m_rcMineEntrance))
+    {
+        if(m_pSelectedCell)
+            m_pSelectedCell->SetSelected(false);
+
+        m_pSelectedCell = NULL;
         return true;
+    }
 
     for(size_t i = 0; i < m_CellsRender.size(); i++)
     {
         CTableCellRender* pCellRender = m_CellsRender[i];
-        if(pCellRender->PointInCell(mouseEvent.x, mouseEvent.y))
+        if(pCellRender->PointInCell(mouseEvent.x, mouseEvent.y) && m_pSelectedCell != pCellRender)
         {
-            if(m_pSelectedCell)
-                m_pSelectedCell->SetSelected(false);
+            if(!m_pSelectedCell)
+            {
+                m_pSelectedCell = pCellRender;
+                m_pSelectedCell->SetSelected(true);
+            }
+            else
+            {
+                if(pCellRender->TryToSwap(m_pSelectedCell))
+                {
+                    m_pSelectedCell->SetSelected(false);
+                    m_pSelectedCell = NULL;
+                }
+                else
+                {
+                    m_pSelectedCell->SetSelected(false);
+                    m_pSelectedCell = pCellRender;
+                    m_pSelectedCell->SetSelected(true);
+                }
+            }
 
-            m_pSelectedCell = pCellRender;
-            m_pSelectedCell->SetSelected(true);
         }
     }
 
