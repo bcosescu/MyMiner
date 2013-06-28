@@ -15,4 +15,5 @@ public:
 
 private:
     SDL_Surface*    m_pBackGroundImg;
+    SDL_Rect        m_rcMineEntrance;
 };

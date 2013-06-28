@@ -1,6 +1,7 @@
 #include "MainWindow.h"
 #include <assert.h>
 #include <iostream>
+#include "GemsResources.h"
 
 CMainWindow::CMainWindow(void)
 {
@@ -23,7 +24,7 @@ bool CMainWindow::Initialize()
         return false;
     }
 
-    return true;
+    return CGemsResources::GetInstance().Initialize();
 }
 
 //Game loop...where the magic happens
@@ -41,8 +42,14 @@ bool CMainWindow::GameLoop()
                 case SDL_KEYDOWN:
                 {
                     HandleKey(event.key);
-                    if(event.key.keysym.sym == SDLK_RETURN)
-                        bInGame = false;
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_RETURN:
+                        case SDLK_ESCAPE:
+                        case SDLK_KP_ENTER:                        
+                            bInGame = false;
+                            break;
+                    }
                     break;
                 }
 
