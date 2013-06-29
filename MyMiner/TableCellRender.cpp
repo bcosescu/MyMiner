@@ -80,19 +80,12 @@ bool CTableCellRender::PointInCell(Uint16 nX, Uint16 nY) const
 
 bool CTableCellRender::TryToSwap(CTableCellRender* pCellRender)
 {
-
     if(!m_pCell)
         return false;
     
     CTableCell* pTheOtherCell = pCellRender->GetCell();
-    if(!m_pCell->IsNeighbour(pTheOtherCell))
-        return false;
-
     if(m_pCell->IsEmpty() || pTheOtherCell->IsEmpty())
         return false;
-
-    if(m_pCell->GetMarker() == pTheOtherCell->GetMarker())
-        return true;
 
     return m_pCell->Swap(pTheOtherCell);
 }

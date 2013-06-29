@@ -9,51 +9,20 @@ CGemsResources::CGemsResources(void)
 
 bool CGemsResources::Initialize()
 {
-    SDL_Surface* pImg = NULL;
-    pImg = IMG_Load("./Resources/Yellow.png");
-    if(!pImg)
-    {
-        assert(false);
-        std::cout << IMG_GetError() << std::endl;
+    if(!LoadImg(eGMYellow, "./Resources/Yellow.png"))
         return false;
-    }
-    m_mapImgResources.insert(std::pair<eGemResource, SDL_Surface*>(eGMYellow, pImg));
 
-    pImg = IMG_Load("./Resources/Green.png");
-    if(!pImg)
-    {
-        assert(false);
-        std::cout << IMG_GetError() << std::endl;
+    if(!LoadImg(eGMGreen, "./Resources/Green.png"))
         return false;
-    }
-    m_mapImgResources.insert(std::pair<eGemResource, SDL_Surface*>(eGMGreen, pImg));
 
-    pImg = IMG_Load("./Resources/Purple.png");
-    if(!pImg)
-    {
-        assert(false);
-        std::cout << IMG_GetError() << std::endl;
+    if(!LoadImg(eGMPurple, "./Resources/Purple.png"))
         return false;
-    }
-    m_mapImgResources.insert(std::pair<eGemResource, SDL_Surface*>(eGMPurple, pImg));
 
-    pImg = IMG_Load("./Resources/Red.png");
-    if(!pImg)
-    {
-        assert(false);
-        std::cout << IMG_GetError() << std::endl;
+    if(!LoadImg(eGMRed, "./Resources/Red.png"))
         return false;
-    }
-    m_mapImgResources.insert(std::pair<eGemResource, SDL_Surface*>(eGMRed, pImg));
 
-    pImg = IMG_Load("./Resources/Blue.png");
-    if(!pImg)
-    {
-        assert(false);
-        std::cout << IMG_GetError() << std::endl;
+    if(!LoadImg(eGMBlue, "./Resources/Blue.png"))
         return false;
-    }
-    m_mapImgResources.insert(std::pair<eGemResource, SDL_Surface*>(eGMBlue, pImg));
 
     return true;
 }
@@ -75,4 +44,29 @@ SDL_Surface* CGemsResources::ResourceFor(CGemsResources::eGemResource resource)
         return NULL;
 
     return it->second;
+}
+
+bool CGemsResources::LoadImg(eGemResource resource, const char* strImgPath)
+{
+    SDL_Surface* pImgTmp = NULL;
+    pImgTmp = IMG_Load(strImgPath);
+    if(!pImgTmp)
+    {
+        assert(false);
+        std::cout << IMG_GetError() << std::endl;
+        return false;
+    }
+
+    SDL_Surface* pImg = SDL_DisplayFormatAlpha(pImgTmp);
+    if(!pImg)
+    {
+        assert(false);
+        std::cout << IMG_GetError() << std::endl;
+        return false;
+    }
+    SDL_FreeSurface(pImgTmp);
+
+    m_mapImgResources.insert(std::pair<eGemResource, SDL_Surface*>(resource, pImg));
+
+    return true;
 }

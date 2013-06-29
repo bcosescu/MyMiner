@@ -39,33 +39,36 @@ bool CMainWindow::GameLoop()
     SDL_Event event;
 
     bool bInGame = true;
-    while(bInGame && SDL_WaitEvent(&event))
+    while(bInGame)
     {
-        switch(event.type)
+        while(SDL_PollEvent(&event))
         {
-            case SDL_MOUSEBUTTONDOWN:
+            switch(event.type)
             {
-                HandleMouse(event.button);
-                break;
-            }
-            case SDL_KEYDOWN:
-            {
-                HandleKey(event.key);
-                switch(event.key.keysym.sym)
+                case SDL_MOUSEBUTTONDOWN:
                 {
-                    case SDLK_RETURN:
-                    case SDLK_ESCAPE:
-                    case SDLK_KP_ENTER:                        
-                        bInGame = false;
-                        break;
+                    HandleMouse(event.button);
+                    break;
                 }
-                break;
-            }
+                case SDL_KEYDOWN:
+                {
+                    HandleKey(event.key);
+                    switch(event.key.keysym.sym)
+                    {
+                        case SDLK_RETURN:
+                        case SDLK_ESCAPE:
+                        case SDLK_KP_ENTER:                        
+                            bInGame = false;
+                            break;
+                    }
+                    break;
+                }
 
-            case SDL_QUIT:
-            {
-                bInGame = false;
-                break;
+                case SDL_QUIT:
+                {
+                    bInGame = false;
+                    break;
+                }
             }
         }
 

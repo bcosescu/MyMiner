@@ -62,41 +62,54 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
 
     if(!PointInRect(mouseEvent.x, mouseEvent.y, m_rcMineEntrance))
     {
-        if(m_pSelectedCell)
-            m_pSelectedCell->SetSelected(false);
-
-        m_pSelectedCell = NULL;
+        SelectCell(NULL);
         return true;
     }
 
-    for(size_t i = 0; i < m_CellsRender.size(); i++)
-    {
-        CTableCellRender* pCellRender = m_CellsRender[i];
-        if(pCellRender->PointInCell(mouseEvent.x, mouseEvent.y) && m_pSelectedCell != pCellRender)
-        {
-            if(!m_pSelectedCell)
-            {
-                m_pSelectedCell = pCellRender;
-                m_pSelectedCell->SetSelected(true);
-            }
-            else
-            {
-                if(pCellRender->TryToSwap(m_pSelectedCell))
-                {
-                    m_pSelectedCell->SetSelected(false);
-                    m_pSelectedCell = NULL;
-                }
-                else
-                {
-                    m_pSelectedCell->SetSelected(false);
-                    m_pSelectedCell = pCellRender;
-                    m_pSelectedCell->SetSelected(true);
-                }
-            }
+    CTableCellRender* pCellRender = GetRenderCell(mouseEvent.x, mouseEvent.y);
 
+    bool bSwapDone = true;
+
+    if(!m_pSelectedCell)
+    {
+        SelectCell(pCellRender);
+        return true;
+    }
+    else if (m_pSelectedCell == pCellRender)
+    {
+        SelectCell(NULL);
+        return true;
+    }
+    else
+    {
+        bSwapDone = pCellRender->TryToSwap(m_pSelectedCell);
+        if(!bSwapDone)
+        {
+            SelectCell(pCellRender);
+            return true;
         }
     }
 
+    if(bSwapDone)
+    {
+        //Analize tableboard for any changes
+        bool bGoodMove = m_TableBoard.CanCollapse(m_pSelectedCell->GetCell()) ||
+                         m_TableBoard.CanCollapse(pCellRender->GetCell());
+
+        if(!bGoodMove)
+        {
+            //Swap cell back
+            pCellRender->TryToSwap(m_pSelectedCell);
+            SelectCell(NULL);
+            return true;
+        }
+
+        m_TableBoard.MatchTableBoard();
+        m_TableBoard.FillWithRandomMarker();
+
+    }
+
+    SelectCell(NULL);
     return true;
 }
 
@@ -117,4 +130,31 @@ void CTableBoardRender::GenerateCellRenders()
 bool CTableBoardRender::PointInRect(int x, int y, const SDL_Rect& rc) const
 {
     return (x >= rc.x) && (x < rc.x + rc.w) && (y >= rc.y) && (y < rc.y + rc.h);
+}
+
+CTableCellRender* CTableBoardRender::GetRenderCell(int x, int y)
+{
+    for(size_t i = 0; i < m_CellsRender.size(); i++)
+    {
+        CTableCellRender* pCellRender = m_CellsRender[i];
+        if(pCellRender->PointInCell(x, y))
+            return pCellRender;
+    }
+
+    return NULL;
+}
+
+void CTableBoardRender::SelectCell(CTableCellRender* pCellRender)
+{
+    if(m_pSelectedCell)
+    {
+        m_pSelectedCell->SetSelected(false);
+    }
+
+    m_pSelectedCell = pCellRender;
+
+    if(m_pSelectedCell)
+    {        
+        m_pSelectedCell->SetSelected(true);
+    }
 }

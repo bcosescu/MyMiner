@@ -26,7 +26,8 @@ private:
 
     void                GenerateCellRenders     ();
     bool                PointInRect             (int x, int y, const SDL_Rect& rc) const;
-
+    CTableCellRender*   GetRenderCell           (int x, int y);
+    void                SelectCell              (CTableCellRender* pRenderCell);
 
     CTableBoard&        m_TableBoard;
     SDL_Surface*        m_pBackGroundImg;

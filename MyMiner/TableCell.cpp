@@ -39,6 +39,9 @@ bool CTableCell::Swap(CTableCell* pCell)
     if(!pCell)
         return false;
 
+    if(!IsNeighbour(pCell))
+        return false;
+
     int nTmpMarker = m_nMarker;
     m_nMarker = pCell->GetMarker();
     pCell->SetMarker(nTmpMarker);

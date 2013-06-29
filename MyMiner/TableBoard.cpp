@@ -65,6 +65,24 @@ CTableBoard::~CTableBoard(void)
     }
 }
 
+//Could this cell be collapsed
+bool CTableBoard::CanCollapse(CTableCell* pCell)
+{
+    if(!pCell || pCell->IsEmpty())
+        return false;
+
+    std::vector<CTableCell*> arrCellsVertically;
+    SearchForMarker(eSDUp, pCell, pCell->GetMarker(), arrCellsVertically);
+    SearchForMarker(eSDDown, pCell, pCell->GetMarker(), arrCellsVertically);
+
+    std::vector<CTableCell*> arrCellsHorizontaly;
+    SearchForMarker(eSDLeft, pCell, pCell->GetMarker(), arrCellsHorizontaly);
+    SearchForMarker(eSDRight, pCell, pCell->GetMarker(), arrCellsHorizontaly);
+
+    return (arrCellsVertically.size() > 1) ||
+           (arrCellsHorizontaly.size() > 1);
+}
+
 //View table board - debug
 void CTableBoard::PrintTableBoard()
 {
@@ -261,10 +279,13 @@ void CTableBoard::FillWithRandomMarker(CTableCell* pCell)
     }
 }
 
-//Fill tableboard starting with the first cell
+//Fill empty cells in tableboard 
 void CTableBoard::FillWithRandomMarker()
 {
-    FillWithRandomMarker(m_arrTable[0][0]);
+    for(size_t i = 0; i < TABLESIZE; i++)
+        for(size_t j = 0; j < TABLESIZE; j++)
+            if(m_arrTable[i][j]->IsEmpty())
+                FillWithRandomMarker(m_arrTable[i][j]);
 }
 
 

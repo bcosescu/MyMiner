@@ -26,5 +26,7 @@ public:
     
 private:
 
-    MAPRESOURCES        m_mapImgResources;
+    bool                        LoadImg     (eGemResource resource, const char* strImgPath);
+    
+    MAPRESOURCES                m_mapImgResources;
 };

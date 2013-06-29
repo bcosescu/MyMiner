@@ -19,16 +19,21 @@ public:
     ~CTableBoard(void);
 
     CTableCell* GetCell                 (int i, int j) { return m_arrTable[i][j];}
+    void        FillWithRandomMarker    ();
+
+    bool        CanCollapse             (CTableCell* pCell);
+    void        MatchTableBoard         ();
+
+private:
+
     void        PrintTableBoard         ();
     void        CollapseColumns         ();
     TableCells  CollapseColumns         (TableCells arrEmptyCells);
 
     void        SearchForMarker         (eSearchDirection eDirection, CTableCell* pCell, int nMarker, std::vector<CTableCell*>& arrCells);
-    void        MatchTableBoard         ();
 
     void        IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCells, CTableCell*& pStartCell);
     void        FillWithRandomMarker    (CTableCell* pCell);
-    void        FillWithRandomMarker    ();
     void        ClearTableBoard         ();
 
     bool        LoadFromTemplate        (const char* strTemplate);
