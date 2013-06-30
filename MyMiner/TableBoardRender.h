@@ -2,6 +2,7 @@
 
 #include "SDL_image.h"
 #include <vector>
+#include "TableCellAnimationBase.h"
 
 class CTableBoard;
 class CTableCellRender;
@@ -22,6 +23,8 @@ public:
 
     bool                HandleMouse             (const SDL_MouseButtonEvent& mouseEvent);
 
+    bool                PendingScenes           (AnimationsList& listPendingAnimations);
+
 private:
 
     void                GenerateCellRenders     ();
@@ -35,4 +38,5 @@ private:
     CTableCellRender*   m_pSelectedCell;
 
     TableCellRenders    m_CellsRender;
+    AnimationsList      m_PendingAnimations;
 };

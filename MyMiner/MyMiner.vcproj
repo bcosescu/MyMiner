@@ -205,7 +205,15 @@
 				>
 			</File>
 			<File
+				RelativePath=".\CellChangesInterface.h"
+				>
+			</File>
+			<File
 				RelativePath=".\Defines.h"
+				>
+			</File>
+			<File
+				RelativePath=".\smart_ptr.h"
 				>
 			</File>
 			<File
@@ -280,6 +288,50 @@
 				RelativePath=".\TableCellRender.h"
 				>
 			</File>
+			<Filter
+				Name="Animations"
+				>
+				<File
+					RelativePath=".\TableCellAnimationBase.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationBase.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationDown.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationDown.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationLeft.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationLeft.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationRight.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationRight.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationUp.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationUp.h"
+					>
+				</File>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>

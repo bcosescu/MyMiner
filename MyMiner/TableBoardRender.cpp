@@ -67,6 +67,8 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
     }
 
     CTableCellRender* pCellRender = GetRenderCell(mouseEvent.x, mouseEvent.y);
+    if(pCellRender->InAnimation())
+        return true;
 
     bool bSwapDone = true;
 
@@ -104,6 +106,18 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
             return true;
         }
 
+        //Save animations
+        m_PendingAnimations.clear();
+        AnimationsList animations;
+        m_pSelectedCell->GetAnimations(animations);  
+        assert(animations.size() != 0);
+        m_PendingAnimations.insert(m_PendingAnimations.end(), animations.begin(), animations.end());
+
+        animations.clear();
+        pCellRender->GetAnimations(animations);  
+        assert(animations.size() != 0);
+        m_PendingAnimations.insert(m_PendingAnimations.end(), animations.begin(), animations.end());
+
         m_TableBoard.MatchTableBoard();
         m_TableBoard.FillWithRandomMarker();
 
@@ -113,15 +127,22 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
     return true;
 }
 
+bool CTableBoardRender::PendingScenes(AnimationsList& listPendingAnimations)
+{
+    if(m_PendingAnimations.size() == 0)
+        return false;
+
+    listPendingAnimations = m_PendingAnimations;
+    return true;
+}
+
 void CTableBoardRender::GenerateCellRenders()
 {
-    Uint16 nCellRederWidth =  TABLE_RENDER_SIZE / TABLESIZE;
-
     for(int i = 0; i < TABLESIZE; i++)
     {
         for(int j = 0; j < TABLESIZE; j++)
         {
-            CTableCellRender* pCellRender = new CTableCellRender(m_rcMineEntrance.x + j * nCellRederWidth, m_rcMineEntrance.y + i * nCellRederWidth, nCellRederWidth, m_TableBoard.GetCell(i, j));
+            CTableCellRender* pCellRender = new CTableCellRender(this, m_rcMineEntrance.x + j * CELL_RENDER_SIZE, m_rcMineEntrance.y + i * CELL_RENDER_SIZE, m_TableBoard.GetCell(i, j));
             m_CellsRender.push_back(pCellRender);
         }
     }
