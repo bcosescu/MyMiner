@@ -3,11 +3,12 @@
 #include "SDL_image.h"
 #include <vector>
 #include "TableCellAnimationBase.h"
+#include "CellChangesInterface.h"
 
 class CTableBoard;
 class CTableCellRender;
 
-class CTableBoardRender
+class CTableBoardRender : public ITableBoardNotifier
 {
 
     typedef std::vector<CTableCellRender*> TableCellRenders;
@@ -24,7 +25,7 @@ public:
     bool                HandleMouse             (const SDL_MouseButtonEvent& mouseEvent);
 
     bool                PendingScenes           (AnimationsList& listPendingAnimations);
-
+    void                EmptyCells              ();
 private:
 
     void                GenerateCellRenders     ();

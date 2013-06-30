@@ -29,6 +29,7 @@ public:
     void        CellMovesLeft   (CTableCell*);
     void        CellMovesUp     (CTableCell*);
     void        CellMovesDown   (CTableCell*);
+    void        CellDestroyed   (CTableCell*);
 
 private:
 

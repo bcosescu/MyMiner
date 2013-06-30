@@ -7,6 +7,7 @@
 #include "TableCellAnimationRight.h"
 #include "TableCellAnimationUp.h"
 #include "TableCellAnimationDown.h"
+#include "TableCellAnimationCellDestroyed.h"
 #include "TableBoardRender.h"
 
 CTableCellRender::CTableCellRender(CTableBoardRender* pBoard, Uint16 nX, Uint16 nY, CTableCell* pCell)
@@ -36,14 +37,16 @@ bool CTableCellRender::Render(SDL_Surface* pSurface)
     if(m_animations.size())
     {
         CTableCellAnimationBasePtr spCurrentAnimation = m_animations.front();
-        spCurrentAnimation->Render(pSurface);
+        bool bCouldRender = spCurrentAnimation->Render(pSurface);
         if(spCurrentAnimation->IsComplete())
         {
             m_animations.pop_front();
         }
-
+        
         return true;
     }
+
+    //Draw static image
 
     RenderSelected(pSurface);
 
@@ -128,4 +131,9 @@ void CTableCellRender::CellMovesUp(CTableCell*)
 void CTableCellRender::CellMovesDown(CTableCell*)
 {
     CreateAnimation<CTableCellAnimationDown>();
+}
+
+void CTableCellRender::CellDestroyed(CTableCell*)
+{
+    CreateAnimation<CTableCellAnimationCellDestroyed>();
 }

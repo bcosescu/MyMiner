@@ -3,6 +3,8 @@
 #include <vector>
 #include "Defines.h"
 
+class ITableBoardNotifier;
+
 class CTableBoard
 {
     typedef std::vector<CTableCell*>    TableRow;
@@ -24,6 +26,8 @@ public:
     bool        CanCollapse             (CTableCell* pCell);
     void        MatchTableBoard         ();
 
+    void        SetNotifier             (ITableBoardNotifier* pNotifier) { m_pNotifier = pNotifier; }
+
 private:
 
     void        PrintTableBoard         ();
@@ -41,5 +45,6 @@ private:
 private:
 
     //main table
-    TableBoard  m_arrTable;
+    TableBoard              m_arrTable;
+    ITableBoardNotifier*    m_pNotifier;
 };

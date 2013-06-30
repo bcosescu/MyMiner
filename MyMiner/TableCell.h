@@ -13,7 +13,7 @@ public:
 
     int                     GetMarker       () const { return m_nMarker; }
     void                    SetMarker       (int nMarker) { m_nMarker = nMarker; }
-    void                    ResetMarker     () {SetMarker(0);}
+    void                    ResetMarker     ();
     bool                    IsEmpty         () const { return m_nMarker == 0; }
 
     void                    SetNotifier     (ICellChangesNotifier* pNotifier) { m_pNotifier = pNotifier; }

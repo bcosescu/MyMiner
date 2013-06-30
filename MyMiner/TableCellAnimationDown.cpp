@@ -10,7 +10,6 @@ CTableCellAnimationDown::~CTableCellAnimationDown(void)
 {
 }
 
-
 void CTableCellAnimationDown::UpdateForAnimation()
 {
    if(m_nY > m_nStartY + CELL_RENDER_SIZE)

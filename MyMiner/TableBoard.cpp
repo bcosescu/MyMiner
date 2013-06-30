@@ -6,6 +6,7 @@
 #include <map>
 #include <algorithm>
 #include <conio.h>
+#include "CellChangesInterface.h"
 
 template<typename tPair>
 struct second_t 
@@ -26,6 +27,8 @@ void EmptyCell(CTableCell* pCell)
 
 CTableBoard::CTableBoard(void)
 {
+    m_pNotifier = NULL;
+
     //Fill with empty cells
     for(size_t i = 0; i < TABLESIZE; i++)
     {
@@ -204,6 +207,9 @@ void CTableBoard::MatchTableBoard()
                 if(arrCells.size() > 1)
                 {
                     std::for_each(arrCells.begin(), arrCells.end(), &EmptyCell);
+                    if(m_pNotifier)
+                        m_pNotifier->EmptyCells();
+
                     bCollapsedColumns = true;
                     CollapseColumns(arrCells);
                 }

@@ -127,6 +127,11 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
     return true;
 }
 
+void CTableBoardRender::EmptyCells()
+{
+    m_PendingAnimations.clear();
+}
+
 bool CTableBoardRender::PendingScenes(AnimationsList& listPendingAnimations)
 {
     if(m_PendingAnimations.size() == 0)
