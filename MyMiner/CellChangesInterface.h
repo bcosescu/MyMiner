@@ -20,5 +20,5 @@ public:
 
     virtual void    CellsToBeDestroyed (std::vector<CTableCell*>) = 0;
     virtual void    CellsDestroyed     (std::vector<CTableCell*>) = 0;
-    virtual void    ColumnsCollapsed   (std::vector<CTableCell*>) = 0;
+    virtual void    ColumnCollapsed    (std::vector<CTableCell*>, std::vector<CTableCell*>) = 0;
 };

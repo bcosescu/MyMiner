@@ -197,3 +197,16 @@ void CTableCellRender::CellWillBeEmpty(CTableCell* pCell)
     m_pTableBoardRender->LastScenes(priorAnimations);
     std::cout << "Cell NONE       with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
 }
+
+void CTableCellRender::LinkRenders(TableCellRenders cellsRenders)
+{
+    CTableCellAnimationBasePtr spAnimation(new CTableCellAnimationNone());
+    for(size_t i = 0; i < cellsRenders.size(); i++)
+    {
+        AnimationsList animations;
+        cellsRenders[i]->GetAnimations(animations);
+        spAnimation->AddPendingAnimations(animations);
+    }
+
+    m_animations.push_back(spAnimation);
+}

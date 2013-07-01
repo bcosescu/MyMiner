@@ -7,6 +7,9 @@
 class CTableCell;
 class CTableBoardRender;
 
+class CTableCellRender;
+typedef std::vector<CTableCellRender*> TableCellRenders;
+
 class CTableCellRender : public ICellChangesNotifier
 {
 public:
@@ -25,6 +28,7 @@ public:
 
     CTableCell* GetCell         () {return m_pCell;}
     void        GetAnimations   (AnimationsList&  animations) {animations = m_animations;}
+    void        LinkRenders     (TableCellRenders cellsRenders);
 
     void        CellMovesRight  (CTableCell*);
     void        CellMovesLeft   (CTableCell*);
@@ -35,7 +39,7 @@ public:
 
 private:
 
-    void        RenderSelected (SDL_Surface* pSurface);
+    void        RenderSelected  (SDL_Surface* pSurface);
 
     template<class T>
     void        CreateAnimation()

@@ -123,28 +123,61 @@ CTableBoard::TableCells CTableBoard::CollapseColumns(TableCells arrEmptyCells)
 {
     TableCells newEmptyCells;
     std::map<CTableCell*, CTableCell*> mapNewEmptyCells;
+    std::map<CTableCell*, CTableCell*> mapOldEmptyCells;
 
-    while(arrEmptyCells.size())
+    //Place empty cells in columns
+    for(size_t i = 0; i < arrEmptyCells.size(); i++)
+        mapOldEmptyCells.insert(std::pair<CTableCell*, CTableCell*>(arrEmptyCells[i], arrEmptyCells[i]));
+
+    std::vector<TableCells> arrEmptyColumns;
+    std::map<CTableCell*, CTableCell*>::iterator it = mapOldEmptyCells.begin();
+    while(it != mapOldEmptyCells.end())
     {
-        CTableCell* pCell = arrEmptyCells.back();
-        CTableCell* pStartCell = pCell;
-        
-        bool bAllCellsAreEmpty = true;
-        while(pCell->GetCellUp() && pCell->IsEmpty())
+        CTableCell* pCell = it->first;
+        //First move up at the end of column and then start down
+        while(pCell->GetCellUp() && pCell->GetCellUp()->IsEmpty())
         {
-            if(!pCell->GetCellUp()->IsEmpty())
-            {
-                mapNewEmptyCells.erase(pCell);
-                pCell->Swap(pCell->GetCellUp());
-                mapNewEmptyCells.insert(std::pair<CTableCell*, CTableCell*>(pCell->GetCellUp(), pCell->GetCellUp()));
-                bAllCellsAreEmpty = false;
-            }
-
             pCell = pCell->GetCellUp();
         }
-    
-        if(!pStartCell->IsEmpty() || bAllCellsAreEmpty)
-            arrEmptyCells.pop_back();
+
+        //Move down and store empty cells
+        TableCells arrColumn;
+        while(pCell && pCell->IsEmpty())
+        {
+            arrColumn.push_back(pCell);
+            mapOldEmptyCells.erase(pCell);
+            pCell = pCell->GetCellDown();
+        }
+        arrEmptyColumns.push_back(arrColumn);
+        it = mapOldEmptyCells.begin();
+    }
+
+    //Move cells down
+    for(size_t i = 0; i < arrEmptyColumns.size(); i++)
+    {
+        TableCells arrEmptyColumn = arrEmptyColumns[i];
+        for(size_t j = 0; j < arrEmptyColumn.size();j++)
+        {
+            CTableCell* pCell = arrEmptyColumn[j];
+
+            TableCells arrNonEmptyCells;
+            //Move empty cell up
+            while(pCell->GetCellUp() && pCell->IsEmpty())
+            {
+                if(!pCell->GetCellUp()->IsEmpty())
+                {
+                    mapNewEmptyCells.erase(pCell);
+                    arrNonEmptyCells.push_back(pCell->GetCellUp());
+                    pCell->Swap(pCell->GetCellUp());
+                    mapNewEmptyCells.insert(std::pair<CTableCell*, CTableCell*>(pCell->GetCellUp(), pCell->GetCellUp()));
+                }
+
+                pCell = pCell->GetCellUp();
+            }
+
+            if(m_pNotifier)
+                m_pNotifier->ColumnCollapsed(arrEmptyColumn, arrNonEmptyCells);
+        }
     }
 
     std::transform(mapNewEmptyCells.begin(), mapNewEmptyCells.end(), std::back_inserter(newEmptyCells), second(mapNewEmptyCells));
@@ -220,9 +253,6 @@ void CTableBoard::MatchTableBoard()
 
                     bCollapsedColumns = true;
                     CollapseColumns(arrCells);
-
-                    if(m_pNotifier)
-                        m_pNotifier->ColumnsCollapsed(arrCells);
 
                     std::cout << "After collapse:\n";
                     PrintTableBoard();

@@ -144,20 +144,17 @@ void CTableBoardRender::CellsDestroyed(std::vector<CTableCell*> arrCells)
     std::cout << "CellsDestroyed: count = " << arrCells.size() << " pending animations = " << m_PendingAnimations.size() << "\n";
 }
 
-void CTableBoardRender::ColumnsCollapsed(std::vector<CTableCell*> arrCells)
+void CTableBoardRender::ColumnCollapsed(std::vector<CTableCell*> arrEmptyCells, std::vector<CTableCell*> arrCollapsedCells)
 {
-    //Update last destroyed cells
-    for(size_t i = 0; i < m_LastCellsDestroyed.size(); i++)
-    {
-        m_LastCellsDestroyed[i]->CellWillBeEmpty(m_LastCellsDestroyed[i]->GetCell());
-    }
+    if(arrCollapsedCells.size() == 0)
+        return;
 
-    //Update last animations
-    for(size_t i = 0; i < m_LastCellsDestroyed.size(); i++)
+    TableCellRenders emptyCellRenders = GetRenders(arrEmptyCells);
+    TableCellRenders collapsedCellRenders = GetRenders(arrCollapsedCells);
+
+    for(size_t i = 0; i < emptyCellRenders.size(); i++)
     {
-        AnimationsList animations;
-        m_LastCellsDestroyed[i]->GetAnimations(animations);
-        m_LastAnimations.push_back(animations.back());
+        emptyCellRenders[i]->LinkRenders(collapsedCellRenders);
     }
 }
 
@@ -221,4 +218,20 @@ void CTableBoardRender::SelectCell(CTableCellRender* pCellRender)
     {        
         m_pSelectedCell->SetSelected(true);
     }
+}
+
+//Get renders for cells
+TableCellRenders CTableBoardRender::GetRenders(std::vector<CTableCell*> arrCells)
+{
+    TableCellRenders cellsRenders;
+    for(size_t i = 0; i < arrCells.size(); i++)
+    {
+        for(size_t j = 0; j < m_CellsRender.size(); j++)
+        {
+            if(arrCells[i] == m_CellsRender[j]->GetCell())
+                cellsRenders.push_back(m_CellsRender[j]);
+        }
+    }
+
+    return cellsRenders;
 }
