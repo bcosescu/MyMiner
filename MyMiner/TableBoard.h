@@ -28,9 +28,11 @@ public:
 
     void        SetNotifier             (ITableBoardNotifier* pNotifier) { m_pNotifier = pNotifier; }
 
+    void        PrintTableBoard         ();
+    bool        LoadFromTemplate        (const char* strTemplate);
+
 private:
 
-    void        PrintTableBoard         ();
     void        CollapseColumns         ();
     TableCells  CollapseColumns         (TableCells arrEmptyCells);
 
@@ -40,7 +42,6 @@ private:
     void        FillWithRandomMarker    (CTableCell* pCell);
     void        ClearTableBoard         ();
 
-    bool        LoadFromTemplate        (const char* strTemplate);
 
 private:
 

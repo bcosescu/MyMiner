@@ -9,6 +9,6 @@ public:
     CTableCellAnimationDown(int nStartX, int nStartY, CGemsResources::eGemResource resource);
     ~CTableCellAnimationDown(void);
 
-    virtual void    UpdateForAnimation      ();
+    virtual void    UpdateForAnimation      (SDL_Surface* pSurface);
 };
 

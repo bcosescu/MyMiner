@@ -7,7 +7,7 @@ class CGemsResources
 {
 public:
 
-    enum eGemResource { eGMRed = 1, eGMYellow, eGMPurple, eGMGreen, eGMBlue};
+    enum eGemResource { eGMNone = 0, eGMRed, eGMYellow, eGMPurple, eGMGreen, eGMBlue};
 
 private:
 

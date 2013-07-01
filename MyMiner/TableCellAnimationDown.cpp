@@ -1,5 +1,6 @@
 #include "TableCellAnimationDown.h"
 #include "Defines.h"
+#include <iostream>
 
 CTableCellAnimationDown::CTableCellAnimationDown(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 : CTableCellAnimationBase(nStartX, nStartY, resource)
@@ -8,10 +9,14 @@ CTableCellAnimationDown::CTableCellAnimationDown(int nStartX, int nStartY, CGems
 
 CTableCellAnimationDown::~CTableCellAnimationDown(void)
 {
+    std::cout << "~CTableCellAnimationDown\n";
 }
 
-void CTableCellAnimationDown::UpdateForAnimation()
+void CTableCellAnimationDown::UpdateForAnimation(SDL_Surface* pSurface)
 {
+    if(!CanDraw())
+        return;
+
    if(m_nY > m_nStartY + CELL_RENDER_SIZE)
         m_bComplete = true;
     else

@@ -1,5 +1,7 @@
 #include "TableCellAnimationCellDestroyed.h"
 #include "Defines.h"
+#include "SDL.h"
+#include <iostream>
 
 CTableCellAnimationCellDestroyed::CTableCellAnimationCellDestroyed(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 : CTableCellAnimationBase(nStartX, nStartY, resource)
@@ -9,12 +11,26 @@ CTableCellAnimationCellDestroyed::CTableCellAnimationCellDestroyed(int nStartX, 
 
 CTableCellAnimationCellDestroyed::~CTableCellAnimationCellDestroyed(void)
 {
+    std::cout << "~CTableCellAnimationCellDestroyed\n";
 }
 
-void CTableCellAnimationCellDestroyed::UpdateForAnimation()
+void CTableCellAnimationCellDestroyed::UpdateForAnimation(SDL_Surface* pSurface)
 {
-   if(m_nKeepCounter > 10)
+    if(!CanDraw())
+        return;
+
+    if(m_nKeepCounter > 20)
+    {
         m_bComplete = true;
+        return;
+    }
     else
         m_nKeepCounter++;
+
+    SDL_Rect rc;
+    rc.x = m_nX;
+    rc.y = m_nY;
+    rc.w = CELL_RENDER_SIZE;
+    rc.h = CELL_RENDER_SIZE;
+    SDL_FillRect(pSurface, &rc, CELL_DESTROY_COLOR);
 }

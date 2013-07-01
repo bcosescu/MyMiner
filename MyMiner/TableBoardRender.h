@@ -25,7 +25,12 @@ public:
     bool                HandleMouse             (const SDL_MouseButtonEvent& mouseEvent);
 
     bool                PendingScenes           (AnimationsList& listPendingAnimations);
-    void                EmptyCells              ();
+    bool                LastScenes              (AnimationsList& listLastAnimations);
+    void                NewAnimationCreated     (CTableCellAnimationBasePtr spAnimation) {m_LastAnimations.push_back(spAnimation);}
+    void                CellsToBeDestroyed      (std::vector<CTableCell*> arrCells);
+    void                CellsDestroyed          (std::vector<CTableCell*> arrCells);
+    void                ColumnsCollapsed        (std::vector<CTableCell*> arrCells);
+
 private:
 
     void                GenerateCellRenders     ();
@@ -40,4 +45,6 @@ private:
 
     TableCellRenders    m_CellsRender;
     AnimationsList      m_PendingAnimations;
+    AnimationsList      m_LastAnimations;
+    TableCellRenders    m_LastCellsDestroyed;
 };

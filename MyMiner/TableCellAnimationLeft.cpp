@@ -1,5 +1,6 @@
 #include "TableCellAnimationLeft.h"
 #include "Defines.h"
+#include <iostream>
 
 CTableCellAnimationLeft::CTableCellAnimationLeft(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 : CTableCellAnimationBase(nStartX, nStartY, resource)
@@ -8,11 +9,14 @@ CTableCellAnimationLeft::CTableCellAnimationLeft(int nStartX, int nStartY, CGems
 
 CTableCellAnimationLeft::~CTableCellAnimationLeft(void)
 {
+    std::cout << "~CTableCellAnimationLeft\n";
 }
 
-
-void CTableCellAnimationLeft::UpdateForAnimation()
+void CTableCellAnimationLeft::UpdateForAnimation(SDL_Surface* pSurface)
 {
+    if(!CanDraw())
+        return;
+
     if(m_nX < m_nStartX - CELL_RENDER_SIZE)
         m_bComplete = true;
     else

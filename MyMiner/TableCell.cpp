@@ -28,10 +28,10 @@ CTableCell::~CTableCell(void)
 
 void CTableCell::ResetMarker()
 {
-    SetMarker(0);
-
     if(m_pNotifier)
         m_pNotifier->CellDestroyed(this);
+
+    SetMarker(0);
 }
 
 bool CTableCell::IsNeighbour(CTableCell* pCell)

@@ -4,6 +4,7 @@
 
 CTableCellAnimationBase::CTableCellAnimationBase(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 {
+    m_nSlowDown = 0;
     m_nStartX = nStartX;
     m_nStartY = nStartY;
     m_nX = nStartX;
@@ -33,14 +34,14 @@ bool CTableCellAnimationBase::Render(SDL_Surface* pSurface)
         }
     }
 
-    if(m_PendingAnimations.size() != 0 || m_bComplete)
+    if(!ContinueRendering())
         return false;
 
-    UpdateForAnimation();
+    UpdateForAnimation(pSurface);
 
     SDL_Surface* pImage = CGemsResources::GetInstance().ResourceFor(m_resource);
     if(!pImage)
-        return false;
+        return true;
 
     Uint16 xOffset = (CELL_RENDER_SIZE - pImage->w) / 2;
     Uint16 yOffset = (CELL_RENDER_SIZE - pImage->h) / 2;
@@ -52,6 +53,20 @@ bool CTableCellAnimationBase::Render(SDL_Surface* pSurface)
     imgRect.h = pImage->h;
 
     SDL_BlitSurface(pImage, NULL, pSurface, &imgRect);
+
+    return true;
+}
+
+bool CTableCellAnimationBase::ContinueRendering()
+{
+    return (m_PendingAnimations.size() == 0);
+}
+
+bool CTableCellAnimationBase::CanDraw()
+{
+    m_nSlowDown++;
+    if(m_nSlowDown % 5 == 0)
+        return true;
 
     return false;
 }

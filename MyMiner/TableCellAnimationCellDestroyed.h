@@ -7,7 +7,7 @@ public:
     CTableCellAnimationCellDestroyed(int nStartX, int nStartY, CGemsResources::eGemResource resource);
     ~CTableCellAnimationCellDestroyed(void);
 
-    virtual void    UpdateForAnimation      ();
+    virtual void    UpdateForAnimation      (SDL_Surface* pSurface);
 
 private:
 

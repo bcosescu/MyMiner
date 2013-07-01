@@ -21,9 +21,14 @@ public:
 
     bool            Render              (SDL_Surface* pSurface);
     void            AddPendingAnimations(const AnimationsList& pendingAnimations) {m_PendingAnimations = pendingAnimations;}
-    virtual void    UpdateForAnimation  () {}
+    virtual void    UpdateForAnimation  (SDL_Surface* pSurface) {}
+    virtual bool    ContinueRendering   ();
+
+    CGemsResources::eGemResource   GetResource         () const {return m_resource;}
 
 protected:
+
+    bool            CanDraw             ();
 
     int                             m_nStartX;
     int                             m_nStartY;
@@ -32,5 +37,6 @@ protected:
     CGemsResources::eGemResource    m_resource;
     bool                            m_bComplete;
     AnimationsList                  m_PendingAnimations;
+    int                             m_nSlowDown;
 
 };

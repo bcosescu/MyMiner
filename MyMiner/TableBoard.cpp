@@ -185,6 +185,7 @@ void CTableBoard::SearchForMarker(eSearchDirection eDirection, CTableCell* pCell
 //Search the whole table board for matching lines and columns
 void CTableBoard::MatchTableBoard()
 {
+    static int n = 0;
     while(1)
     {
         bool bCollapsedColumns = false;
@@ -206,12 +207,25 @@ void CTableBoard::MatchTableBoard()
 
                 if(arrCells.size() > 1)
                 {
-                    std::for_each(arrCells.begin(), arrCells.end(), &EmptyCell);
                     if(m_pNotifier)
-                        m_pNotifier->EmptyCells();
+                        m_pNotifier->CellsToBeDestroyed(arrCells);
+
+                    std::for_each(arrCells.begin(), arrCells.end(), &EmptyCell);
+
+                    if(m_pNotifier)
+                        m_pNotifier->CellsDestroyed(arrCells);
+
+                    std::cout << "MatchTableBoard pass:" << n++ << "\n";
+                    PrintTableBoard();
 
                     bCollapsedColumns = true;
                     CollapseColumns(arrCells);
+
+                    if(m_pNotifier)
+                        m_pNotifier->ColumnsCollapsed(arrCells);
+
+                    std::cout << "After collapse:\n";
+                    PrintTableBoard();
                 }
             }
         }

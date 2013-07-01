@@ -2,6 +2,7 @@
 #include "SDL.h"
 #include "CellChangesInterface.h"
 #include "TableCellAnimationBase.h"
+#include <iostream>
 
 class CTableCell;
 class CTableBoardRender;
@@ -30,6 +31,7 @@ public:
     void        CellMovesUp     (CTableCell*);
     void        CellMovesDown   (CTableCell*);
     void        CellDestroyed   (CTableCell*);
+    void        CellWillBeEmpty (CTableCell*);
 
 private:
 
@@ -44,6 +46,7 @@ private:
         if(m_pTableBoardRender->PendingScenes(priorAnimations))
             spAnimation->AddPendingAnimations(priorAnimations);
 
+        m_pTableBoardRender->NewAnimationCreated(spAnimation);
         m_animations.push_back(spAnimation);
     }
 

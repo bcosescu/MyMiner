@@ -8,7 +8,20 @@
 #include "TableCellAnimationUp.h"
 #include "TableCellAnimationDown.h"
 #include "TableCellAnimationCellDestroyed.h"
+#include "TableCellAnimationNone.h"
 #include "TableBoardRender.h"
+
+template<>
+void CTableCellRender::CreateAnimation<CTableCellAnimationNone>()
+{
+    CTableCellAnimationBasePtr spAnimation(new CTableCellAnimationNone());
+
+    AnimationsList priorAnimations;
+    if(m_pTableBoardRender->LastScenes(priorAnimations))
+        spAnimation->AddPendingAnimations(priorAnimations);
+
+    m_animations.push_back(spAnimation);
+}
 
 CTableCellRender::CTableCellRender(CTableBoardRender* pBoard, Uint16 nX, Uint16 nY, CTableCell* pCell)
 {
@@ -29,10 +42,6 @@ bool CTableCellRender::Render(SDL_Surface* pSurface)
     if(!m_pCell)
         return false;
 
-    SDL_Surface* pImage = CGemsResources::GetInstance().ResourceFor((CGemsResources::eGemResource)m_pCell->GetMarker());
-    if(!pImage)
-        return false;
-
     //Render pending animations
     if(m_animations.size())
     {
@@ -42,9 +51,16 @@ bool CTableCellRender::Render(SDL_Surface* pSurface)
         {
             m_animations.pop_front();
         }
-        
-        return true;
+
+        if(bCouldRender)
+            return true;
     }
+
+    //Draw the last animation resource
+    CGemsResources::eGemResource resource = m_animations.size() ? m_animations.front()->GetResource() : (CGemsResources::eGemResource)m_pCell->GetMarker();
+    SDL_Surface* pImage = CGemsResources::GetInstance().ResourceFor(resource);
+    if(!pImage)
+        return false;
 
     //Draw static image
 
@@ -113,27 +129,71 @@ bool CTableCellRender::TryToSwap(CTableCellRender* pCellRender)
     return m_pCell->Swap(pTheOtherCell);
 }
 
-void CTableCellRender::CellMovesRight(CTableCell*)
+void CTableCellRender::CellMovesRight(CTableCell* pCell)
 {
+    if(pCell->IsEmpty())
+        return;
+
     CreateAnimation<CTableCellAnimationRight>();
+
+    AnimationsList priorAnimations;
+    m_pTableBoardRender->PendingScenes(priorAnimations);
+    std::cout << "Cell moves RIGHT with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
 }
 
-void CTableCellRender::CellMovesLeft(CTableCell*)
+void CTableCellRender::CellMovesLeft(CTableCell* pCell)
 {
+    if(pCell->IsEmpty())
+        return;
+
     CreateAnimation<CTableCellAnimationLeft>();
+
+    AnimationsList priorAnimations;
+    m_pTableBoardRender->PendingScenes(priorAnimations);
+    std::cout << "Cell moves LEFT  with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";    
 }
 
-void CTableCellRender::CellMovesUp(CTableCell*)
+void CTableCellRender::CellMovesUp(CTableCell* pCell)
 {
+    if(pCell->IsEmpty())
+        return;
+
     CreateAnimation<CTableCellAnimationUp>();
+
+    AnimationsList priorAnimations;
+    m_pTableBoardRender->PendingScenes(priorAnimations);
+    std::cout << "Cell moves UP    with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";    
 }
 
-void CTableCellRender::CellMovesDown(CTableCell*)
+void CTableCellRender::CellMovesDown(CTableCell* pCell)
 {
+    if(pCell->IsEmpty())
+        return;
+
     CreateAnimation<CTableCellAnimationDown>();
+
+    AnimationsList priorAnimations;
+    m_pTableBoardRender->PendingScenes(priorAnimations);
+    std::cout << "Cell moves DOWN  with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
 }
 
-void CTableCellRender::CellDestroyed(CTableCell*)
+void CTableCellRender::CellDestroyed(CTableCell* pCell)
 {
+    if(pCell->IsEmpty())
+        return;
+
     CreateAnimation<CTableCellAnimationCellDestroyed>();
+
+    AnimationsList priorAnimations;
+    m_pTableBoardRender->PendingScenes(priorAnimations);
+    std::cout << "Cell DESTROYED with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
+}
+
+void CTableCellRender::CellWillBeEmpty(CTableCell* pCell)
+{
+    CreateAnimation<CTableCellAnimationNone>();
+
+    AnimationsList priorAnimations;
+    m_pTableBoardRender->LastScenes(priorAnimations);
+    std::cout << "Cell NONE       with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
 }

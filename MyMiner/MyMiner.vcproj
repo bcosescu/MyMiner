@@ -324,6 +324,14 @@
 					>
 				</File>
 				<File
+					RelativePath=".\TableCellAnimationNone.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationNone.h"
+					>
+				</File>
+				<File
 					RelativePath=".\TableCellAnimationRight.cpp"
 					>
 				</File>

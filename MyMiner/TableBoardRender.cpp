@@ -23,6 +23,7 @@ CTableBoardRender::CTableBoardRender(CTableBoard& tableboard)
     m_rcMineEntrance.h = TABLE_RENDER_SIZE;
 
     m_pSelectedCell = NULL;
+    m_TableBoard.SetNotifier(this);
     GenerateCellRenders();
 }
 
@@ -106,20 +107,11 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
             return true;
         }
 
-        //Save animations
-        m_PendingAnimations.clear();
-        AnimationsList animations;
-        m_pSelectedCell->GetAnimations(animations);  
-        assert(animations.size() != 0);
-        m_PendingAnimations.insert(m_PendingAnimations.end(), animations.begin(), animations.end());
-
-        animations.clear();
-        pCellRender->GetAnimations(animations);  
-        assert(animations.size() != 0);
-        m_PendingAnimations.insert(m_PendingAnimations.end(), animations.begin(), animations.end());
-
         m_TableBoard.MatchTableBoard();
-        m_TableBoard.FillWithRandomMarker();
+        m_PendingAnimations.clear();
+        m_LastAnimations.clear();
+        m_LastCellsDestroyed.clear();
+        //m_TableBoard.FillWithRandomMarker();
 
     }
 
@@ -127,9 +119,46 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
     return true;
 }
 
-void CTableBoardRender::EmptyCells()
+void CTableBoardRender::CellsToBeDestroyed(std::vector<CTableCell*> arrCells)
 {
-    m_PendingAnimations.clear();
+    m_PendingAnimations = m_LastAnimations;
+    m_LastAnimations.clear();
+    std::cout << "CellsToBeDestroyed: count = " << arrCells.size() << " pending animations = " << m_PendingAnimations.size() << "\n";
+}
+
+void CTableBoardRender::CellsDestroyed(std::vector<CTableCell*> arrCells)
+{
+    m_PendingAnimations = m_LastAnimations;
+    m_LastAnimations.clear();
+    m_LastCellsDestroyed.clear();
+
+    for(size_t i = 0; i < arrCells.size(); i++)
+    {
+        for(size_t j = 0; j < m_CellsRender.size(); j++)
+        {
+            if(arrCells[i] == m_CellsRender[j]->GetCell())
+                m_LastCellsDestroyed.push_back(m_CellsRender[j]);
+        }
+    }
+
+    std::cout << "CellsDestroyed: count = " << arrCells.size() << " pending animations = " << m_PendingAnimations.size() << "\n";
+}
+
+void CTableBoardRender::ColumnsCollapsed(std::vector<CTableCell*> arrCells)
+{
+    //Update last destroyed cells
+    for(size_t i = 0; i < m_LastCellsDestroyed.size(); i++)
+    {
+        m_LastCellsDestroyed[i]->CellWillBeEmpty(m_LastCellsDestroyed[i]->GetCell());
+    }
+
+    //Update last animations
+    for(size_t i = 0; i < m_LastCellsDestroyed.size(); i++)
+    {
+        AnimationsList animations;
+        m_LastCellsDestroyed[i]->GetAnimations(animations);
+        m_LastAnimations.push_back(animations.back());
+    }
 }
 
 bool CTableBoardRender::PendingScenes(AnimationsList& listPendingAnimations)
@@ -138,6 +167,15 @@ bool CTableBoardRender::PendingScenes(AnimationsList& listPendingAnimations)
         return false;
 
     listPendingAnimations = m_PendingAnimations;
+    return true;
+}
+
+bool CTableBoardRender::LastScenes(AnimationsList& listLastAnimations)
+{
+    if(m_LastAnimations.size() == 0)
+        return false;
+
+    listLastAnimations = m_LastAnimations;
     return true;
 }
 
