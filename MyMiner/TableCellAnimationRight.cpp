@@ -20,5 +20,5 @@ void CTableCellAnimationRight::UpdateForAnimation()
     if(m_nX > m_nStartX + CELL_RENDER_SIZE)
         m_bComplete = true;
     else
-        m_nX++;
+        m_nX += SPEED_ANIMATION;
 }

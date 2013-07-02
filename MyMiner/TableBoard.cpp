@@ -119,10 +119,9 @@ void CTableBoard::CollapseColumns()
 }
 
 //Collapse columns starting from a vector of empty cells
-CTableBoard::TableCells CTableBoard::CollapseColumns(TableCells arrEmptyCells)
+CTableBoard::TableCells CTableBoard::MoveCellsDown(TableCells arrEmptyCells)
 {
     TableCells newEmptyCells;
-    std::map<CTableCell*, CTableCell*> mapNewEmptyCells;
     std::map<CTableCell*, CTableCell*> mapOldEmptyCells;
 
     //Place empty cells in columns
@@ -156,31 +155,42 @@ CTableBoard::TableCells CTableBoard::CollapseColumns(TableCells arrEmptyCells)
     for(size_t i = 0; i < arrEmptyColumns.size(); i++)
     {
         TableCells arrEmptyColumn = arrEmptyColumns[i];
-        for(TableCells::iterator it = arrEmptyColumn.begin(); it != arrEmptyColumn.end();it++)
+        TableCells arrNewEmptyCells = CollapseColumn(arrEmptyColumn);
+        std::copy(arrNewEmptyCells.begin(), arrNewEmptyCells.end(), std::back_inserter(newEmptyCells));
+    }
+
+    return newEmptyCells;
+}
+
+CTableBoard::TableCells CTableBoard::CollapseColumn(TableCells arrEmptyColumn)
+{
+    TableCells newEmptyCells;
+    std::map<CTableCell*, CTableCell*> mapNewEmptyCells;
+
+    for(TableCells::iterator it = arrEmptyColumn.begin(); it != arrEmptyColumn.end();it++)
+    {
+        CTableCell* pCell = *it;
+
+        TableCells arrNonEmptyCells;
+        //Move empty cell up
+        while(pCell->GetCellUp() && pCell->IsEmpty())
         {
-            CTableCell* pCell = *it;
-
-            TableCells arrNonEmptyCells;
-            //Move empty cell up
-            while(pCell->GetCellUp() && pCell->IsEmpty())
+            if(!pCell->GetCellUp()->IsEmpty())
             {
-                if(!pCell->GetCellUp()->IsEmpty())
-                {
-                    mapNewEmptyCells.erase(pCell);
-                    arrNonEmptyCells.push_back(pCell->GetCellUp());
-                    pCell->Swap(pCell->GetCellUp());
-                    mapNewEmptyCells.insert(std::pair<CTableCell*, CTableCell*>(pCell->GetCellUp(), pCell->GetCellUp()));
-                }
-
-                pCell = pCell->GetCellUp();
+                mapNewEmptyCells.erase(pCell);
+                arrNonEmptyCells.push_back(pCell->GetCellUp());
+                pCell->Swap(pCell->GetCellUp());
+                mapNewEmptyCells.insert(std::pair<CTableCell*, CTableCell*>(pCell->GetCellUp(), pCell->GetCellUp()));
             }
 
-            if(m_pNotifier)
-            {
-                TableCells arrEmptyCells;
-                std::copy(it, arrEmptyColumn.end(), std::back_inserter(arrEmptyCells));
-                m_pNotifier->ColumnCollapsed(arrEmptyCells, arrNonEmptyCells);
-            }
+            pCell = pCell->GetCellUp();
+        }
+
+        if(m_pNotifier)
+        {
+            TableCells arrEmptyCells;
+            std::copy(it, arrEmptyColumn.end(), std::back_inserter(arrEmptyCells));
+            m_pNotifier->ColumnCollapsed(arrEmptyCells, arrNonEmptyCells);
         }
     }
 
@@ -256,7 +266,7 @@ void CTableBoard::MatchTableBoard()
                     PrintTableBoard();
 
                     bCollapsedColumns = true;
-                    CollapseColumns(arrCells);
+                    MoveCellsDown(arrCells);
 
                     std::cout << "After collapse:\n";
                     PrintTableBoard();
@@ -302,46 +312,83 @@ void CTableBoard::IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCel
     }
 }
 
-//Given a certain empty cell fill all neighbors
-void CTableBoard::FillWithRandomMarker(CTableCell* pCell)
+//Generate a random marker
+int CTableBoard::GenerateRandomMarker(CTableCell* pCell)
 {
     if(!pCell || !pCell->IsEmpty())
-        return;
+        return 0;
 
-    int nGeneratedMarker = rand() % MAX_CELL_MARKER + 1;
-
-    TableCells arrCellsVertically;
-    SearchForMarker(eSDUp, pCell, nGeneratedMarker, arrCellsVertically);
-    SearchForMarker(eSDDown, pCell, nGeneratedMarker, arrCellsVertically);
-
-    TableCells arrCellsHorizontaly;
-    SearchForMarker(eSDLeft, pCell, nGeneratedMarker, arrCellsHorizontaly);
-    SearchForMarker(eSDRight, pCell, nGeneratedMarker, arrCellsHorizontaly);
+    int nGeneratedMarker = 0;
+    bool bMarkerIsGood = false;
     
-    bool bMarkerIsGood = (arrCellsVertically.size() <= 1) && (arrCellsHorizontaly.size() <= 1);
-    if(bMarkerIsGood)
+    while(!bMarkerIsGood)
     {
-        pCell->SetMarker(nGeneratedMarker);
-        FillWithRandomMarker(pCell->GetCellUp());
-        FillWithRandomMarker(pCell->GetCellDown());
-        FillWithRandomMarker(pCell->GetCellLeft());
-        FillWithRandomMarker(pCell->GetCellRight());
+        nGeneratedMarker = rand() % MAX_CELL_MARKER + 1;
+
+        TableCells arrCellsVertically;
+        SearchForMarker(eSDUp, pCell, nGeneratedMarker, arrCellsVertically);
+        SearchForMarker(eSDDown, pCell, nGeneratedMarker, arrCellsVertically);
+
+        TableCells arrCellsHorizontaly;
+        SearchForMarker(eSDLeft, pCell, nGeneratedMarker, arrCellsHorizontaly);
+        SearchForMarker(eSDRight, pCell, nGeneratedMarker, arrCellsHorizontaly);
+        
+        bMarkerIsGood = (arrCellsVertically.size() <= 1) && (arrCellsHorizontaly.size() <= 1);
     }
-    else
-    {
-        FillWithRandomMarker(pCell);
-    }
+
+    return nGeneratedMarker;
 }
 
 //Fill empty cells in tableboard 
 void CTableBoard::FillWithRandomMarker()
 {
-    for(size_t i = 0; i < TABLESIZE; i++)
-        for(size_t j = 0; j < TABLESIZE; j++)
+    for(size_t j = 0; j < TABLESIZE; j++)
+    {
+        TableCells filledCollumn;
+        for(size_t i = 0; i < TABLESIZE; i++)
+        {
             if(m_arrTable[i][j]->IsEmpty())
-                FillWithRandomMarker(m_arrTable[i][j]);
-}
+            {
+                int nMarker = GenerateRandomMarker(m_arrTable[i][j]);
+                m_arrTable[i][j]->SetMarker(nMarker);
+                filledCollumn.push_back(m_arrTable[i][j]);
+            }
+        }
 
+        if(filledCollumn.size() == 0)
+            continue;
+
+        //Create extra cells that we link to the cells in tableboard and the we delete them
+        TableCells extraCells;
+        for(size_t ii = 0; ii < filledCollumn.size(); ii++)
+        {
+            CTableCell* pCell = new CTableCell(filledCollumn[ii]->GetMarker());
+            extraCells.push_back(pCell);
+
+            pCell->SetCellUp(ii == 0? NULL : extraCells[ii - 1]);
+            pCell->SetCellDown(NULL);
+            pCell->SetCellLeft(NULL);
+            pCell->SetCellRight(NULL);
+
+            if(ii != 0)
+                extraCells[ii - 1]->SetCellDown(pCell);
+
+            filledCollumn[ii]->SetMarker(0);
+        }
+
+        m_arrTable[0][j]->SetCellUp(extraCells.back());
+        extraCells.back()->SetCellDown(m_arrTable[0][j]);
+
+        CollapseColumn(filledCollumn);
+
+        //Delete links
+        m_arrTable[0][j]->SetCellUp(NULL);
+        for(size_t ii = 0; ii < extraCells.size(); ii++)
+        {
+            delete extraCells[ii];
+        }
+    }
+}
 
 //Clear all markers
 void CTableBoard::ClearTableBoard()

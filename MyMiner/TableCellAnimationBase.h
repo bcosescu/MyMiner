@@ -4,6 +4,8 @@
 #include <list>
 #include "smart_ptr.h"
 
+#define SPEED_ANIMATION 3
+
 class CTableCellAnimationBase;
 
 typedef smart_ptr::strong_ptr<CTableCellAnimationBase> CTableCellAnimationBasePtr;

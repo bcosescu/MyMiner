@@ -52,7 +52,7 @@ void CAutomatedTests::ExecuteTests()
 
     std::cout << "Test 2 Pass\n";
     tableboard.ClearTableBoard();
-    tableboard.FillWithRandomMarker(tableboard.m_arrTable[0][0]);
+    tableboard.FillWithRandomMarker();
 
     //Verify markers in table cells
     for(size_t i = 0; i < tableboard.m_arrTable.size(); i++)
@@ -141,7 +141,7 @@ void CAutomatedTests::ExecuteTests()
     tableboard.PrintTableBoard();
     std::cout << "Test 5 Pass\n";
     
-    CTableBoard::TableCells newEmptyCells = tableboard.CollapseColumns(arrCells);
+    CTableBoard::TableCells newEmptyCells = tableboard.MoveCellsDown(arrCells);
 
     assert(newEmptyCells.size() == arrCells.size());
     tableboard.PrintTableBoard();
@@ -172,7 +172,7 @@ void CAutomatedTests::ExecuteTests()
     for(size_t i = 0; i < arrCells.size(); i++)
         arrCells[i]->ResetMarker();
 
-    newEmptyCells = tableboard.CollapseColumns(arrCells);
+    newEmptyCells = tableboard.MoveCellsDown(arrCells);
     assert(newEmptyCells.size() == arrCells.size());
     std::cout << "After:\n";
     tableboard.PrintTableBoard();
@@ -216,7 +216,7 @@ void CAutomatedTests::ExecuteTests()
     std::cout << "Test 9 Pass\n";
 
     tableboard.ClearTableBoard();
-    tableboard.FillWithRandomMarker(tableboard.m_arrTable[0][0]);
+    tableboard.FillWithRandomMarker();
     tableboard.PrintTableBoard();
     std::cout << "Test 10 Pass\n";
 
@@ -230,7 +230,7 @@ void CAutomatedTests::ExecuteTests()
                                  4 4 3 4 5 5 3 1,\
                                  3 5 4 1 5 5 2 1");
 
-    tableboard.FillWithRandomMarker(tableboard.m_arrTable[0][0]);
+    tableboard.FillWithRandomMarker();
     tableboard.PrintTableBoard();
     std::cout << "Test 11 Pass\n";
 

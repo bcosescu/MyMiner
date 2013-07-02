@@ -13,13 +13,13 @@
 int main( int argc, char* argv[] )
 {
     srand((unsigned int)time(NULL));
-    //CAutomatedTests::ExecuteTests();
+    CAutomatedTests::ExecuteTests();
     
     SDL_Init(SDL_INIT_VIDEO);
     atexit(SDL_Quit);
 
     CTableBoard tableboard;
-    //tableboard.FillWithRandomMarker();
+    
 //     tableboard.LoadFromTemplate("1 4 4 1 1 3 1 3,\
 //                                  3 3 5 4 4 2 1 2,\
 //                                  1 4 2 2 4 3 4 4,\
@@ -38,7 +38,7 @@ int main( int argc, char* argv[] )
 //                                  0 4 4 4 5 4 0 0,\
 //                                  0 4 2 3 4 0 0 0,\
 //                                  0 3 2 1 4 0 0 0");
-
+/*
     tableboard.LoadFromTemplate("0 0 0 0 1 0 0 0,\
                                  3 3 3 0 2 0 0 0,\
                                  0 3 0 5 3 0 0 0,\
@@ -47,7 +47,7 @@ int main( int argc, char* argv[] )
                                  0 4 4 4 5 4 0 0,\
                                  0 4 2 3 4 0 0 0,\
                                  0 3 2 1 4 0 0 0");
-  
+  */
     std::cout << "Initial:\n";
     tableboard.PrintTableBoard();
 

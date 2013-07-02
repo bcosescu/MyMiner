@@ -73,6 +73,7 @@ void CTableCellAnimationBase::RenderImage(SDL_Surface* pImage, SDL_Surface* pSur
 
 bool CTableCellAnimationBase::CanDraw()
 {
+    return true;
     m_nSlowDown++;
     if(m_nSlowDown % 5 == 0)
         return true;

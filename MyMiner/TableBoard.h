@@ -34,12 +34,13 @@ public:
 private:
 
     void        CollapseColumns         ();
-    TableCells  CollapseColumns         (TableCells arrEmptyCells);
+    TableCells  MoveCellsDown           (TableCells arrEmptyCells);
+    TableCells  CollapseColumn          (TableCells arrEmptyCells);
 
     void        SearchForMarker         (eSearchDirection eDirection, CTableCell* pCell, int nMarker, TableCells& arrCells);
 
     void        IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCells, CTableCell*& pStartCell);
-    void        FillWithRandomMarker    (CTableCell* pCell);
+    int         GenerateRandomMarker    (CTableCell* pCell);
     void        ClearTableBoard         ();
 
 
