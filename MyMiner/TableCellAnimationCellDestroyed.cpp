@@ -14,7 +14,7 @@ CTableCellAnimationCellDestroyed::~CTableCellAnimationCellDestroyed(void)
     std::cout << "~CTableCellAnimationCellDestroyed\n";
 }
 
-void CTableCellAnimationCellDestroyed::UpdateForAnimation(SDL_Surface* pSurface)
+void CTableCellAnimationCellDestroyed::UpdateForAnimation()
 {
     if(!CanDraw())
         return;
@@ -26,11 +26,15 @@ void CTableCellAnimationCellDestroyed::UpdateForAnimation(SDL_Surface* pSurface)
     }
     else
         m_nKeepCounter++;
+}
 
+void CTableCellAnimationCellDestroyed::RenderImage(SDL_Surface* pImage, SDL_Surface* pSurface)
+{
     SDL_Rect rc;
     rc.x = m_nX;
     rc.y = m_nY;
     rc.w = CELL_RENDER_SIZE;
     rc.h = CELL_RENDER_SIZE;
     SDL_FillRect(pSurface, &rc, CELL_DESTROY_COLOR);
+    CTableCellAnimationBase::RenderImage(pImage, pSurface);
 }

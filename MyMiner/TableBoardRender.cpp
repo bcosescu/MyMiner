@@ -2,6 +2,7 @@
 #include <iostream>
 #include <assert.h>
 #include "TableCellRender.h"
+#include "TableCellRenderFake.h"
 #include "Defines.h"
 #include "TableBoard.h"
 
@@ -95,7 +96,7 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
 
     if(bSwapDone)
     {
-        //Analize tableboard for any changes
+        //Analyze tableboard for any changes
         bool bGoodMove = m_TableBoard.CanCollapse(m_pSelectedCell->GetCell()) ||
                          m_TableBoard.CanCollapse(pCellRender->GetCell());
 
@@ -111,7 +112,7 @@ bool CTableBoardRender::HandleMouse(const SDL_MouseButtonEvent& mouseEvent)
         m_PendingAnimations.clear();
         m_LastAnimations.clear();
         m_LastCellsDestroyed.clear();
-        //m_TableBoard.FillWithRandomMarker();
+        m_TableBoard.FillWithRandomMarker();
 
     }
 
@@ -178,6 +179,13 @@ bool CTableBoardRender::LastScenes(AnimationsList& listLastAnimations)
 
 void CTableBoardRender::GenerateCellRenders()
 {
+    //Create a first row of fake renders, useful for placing resources that enter the tableboard
+    for(int i = 0; i < TABLESIZE; i++)
+    {
+        CTableCellRenderFake* pCellRender = new CTableCellRenderFake(this, m_rcMineEntrance.x + i * CELL_RENDER_SIZE, m_rcMineEntrance.y - CELL_RENDER_SIZE);
+        m_CellsRender.push_back(pCellRender);
+    }
+
     for(int i = 0; i < TABLESIZE; i++)
     {
         for(int j = 0; j < TABLESIZE; j++)

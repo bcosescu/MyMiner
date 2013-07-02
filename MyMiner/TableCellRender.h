@@ -15,34 +15,34 @@ class CTableCellRender : public ICellChangesNotifier
 public:
 
     CTableCellRender(CTableBoardRender* pBoard, Uint16 nX, Uint16 nY, CTableCell* pCell);
-    ~CTableCellRender(void);
+    virtual ~CTableCellRender(void);
 
-    bool        Render          (SDL_Surface* pSurface);
-    bool        PointInCell     (Uint16 nX, Uint16 nY) const;
+    virtual bool    Render          (SDL_Surface* pSurface);
+    virtual bool    PointInCell     (Uint16 nX, Uint16 nY) const;
 
-    void        SetSelected     (bool bSelected) {m_bSelected = bSelected;}
-    bool        IsSelected      () const {return m_bSelected;}
-    bool        InAnimation     () const {return m_animations.size() != 0;}
+    void            SetSelected     (bool bSelected) {m_bSelected = bSelected;}
+    bool            IsSelected      () const {return m_bSelected;}
+    bool            InAnimation     () const {return m_animations.size() != 0;}
 
-    bool        TryToSwap       (CTableCellRender* pCellRender);
+    bool            TryToSwap       (CTableCellRender* pCellRender);
 
-    CTableCell* GetCell         () {return m_pCell;}
-    void        GetAnimations   (AnimationsList&  animations) {animations = m_animations;}
-    void        LinkRenders     (TableCellRenders cellsRenders);
+    CTableCell*     GetCell         () {return m_pCell;}
+    void            GetAnimations   (AnimationsList&  animations) {animations = m_animations;}
+    void            LinkRenders     (TableCellRenders cellsRenders);
 
-    void        CellMovesRight  (CTableCell*);
-    void        CellMovesLeft   (CTableCell*);
-    void        CellMovesUp     (CTableCell*);
-    void        CellMovesDown   (CTableCell*);
-    void        CellDestroyed   (CTableCell*);
-    void        CellWillBeEmpty (CTableCell*);
+    void            CellMovesRight  (CTableCell*);
+    void            CellMovesLeft   (CTableCell*);
+    void            CellMovesUp     (CTableCell*);
+    void            CellMovesDown   (CTableCell*);
+    void            CellDestroyed   (CTableCell*);
+    void            CellWillBeEmpty (CTableCell*);
 
-private:
+protected:
 
-    void        RenderSelected  (SDL_Surface* pSurface);
+    void            RenderSelected  (SDL_Surface* pSurface);
 
     template<class T>
-    void        CreateAnimation()
+    void            CreateAnimation()
     {
         CTableCellAnimationBasePtr spAnimation(new T(m_nX, m_nY, (CGemsResources::eGemResource)m_pCell->GetMarker()));
     

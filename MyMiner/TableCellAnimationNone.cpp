@@ -11,7 +11,7 @@ CTableCellAnimationNone::~CTableCellAnimationNone(void)
     std::cout << "~CTableCellAnimationNone\n";
 }
 
-void CTableCellAnimationNone::UpdateForAnimation(SDL_Surface* pSurface)
+void CTableCellAnimationNone::UpdateForAnimation()
 {
     m_bComplete = (m_PendingAnimations.size() == 0);
 }

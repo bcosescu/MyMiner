@@ -12,7 +12,7 @@ CTableCellAnimationLeft::~CTableCellAnimationLeft(void)
     std::cout << "~CTableCellAnimationLeft\n";
 }
 
-void CTableCellAnimationLeft::UpdateForAnimation(SDL_Surface* pSurface)
+void CTableCellAnimationLeft::UpdateForAnimation()
 {
     if(!CanDraw())
         return;

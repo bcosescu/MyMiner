@@ -27,7 +27,10 @@ CTableCellRender::CTableCellRender(CTableBoardRender* pBoard, Uint16 nX, Uint16 
 {
     m_pTableBoardRender = pBoard;
     m_pCell = pCell;
-    m_pCell->SetNotifier(this);
+    
+    if(m_pCell)
+        m_pCell->SetNotifier(this);
+
     m_nX = nX;
     m_nY = nY;
     m_bSelected = false;

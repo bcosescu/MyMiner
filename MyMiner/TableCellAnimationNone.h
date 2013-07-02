@@ -9,6 +9,6 @@ public:
     CTableCellAnimationNone();
     ~CTableCellAnimationNone();
 
-    virtual void    UpdateForAnimation      (SDL_Surface* pSurface);
+    virtual void    UpdateForAnimation      ();
     virtual bool    ContinueRendering       () {return true;}
 };

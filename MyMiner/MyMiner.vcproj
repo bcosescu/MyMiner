@@ -288,6 +288,14 @@
 				RelativePath=".\TableCellRender.h"
 				>
 			</File>
+			<File
+				RelativePath=".\TableCellRenderFake.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\TableCellRenderFake.h"
+				>
+			</File>
 			<Filter
 				Name="Animations"
 				>
@@ -313,6 +321,14 @@
 				</File>
 				<File
 					RelativePath=".\TableCellAnimationDown.h"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationDrop.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\TableCellAnimationDrop.h"
 					>
 				</File>
 				<File

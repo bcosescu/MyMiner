@@ -36,7 +36,7 @@ private:
     void        CollapseColumns         ();
     TableCells  CollapseColumns         (TableCells arrEmptyCells);
 
-    void        SearchForMarker         (eSearchDirection eDirection, CTableCell* pCell, int nMarker, std::vector<CTableCell*>& arrCells);
+    void        SearchForMarker         (eSearchDirection eDirection, CTableCell* pCell, int nMarker, TableCells& arrCells);
 
     void        IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCells, CTableCell*& pStartCell);
     void        FillWithRandomMarker    (CTableCell* pCell);

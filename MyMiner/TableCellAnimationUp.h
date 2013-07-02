@@ -9,5 +9,5 @@ public:
     CTableCellAnimationUp(int nStartX, int nStartY, CGemsResources::eGemResource resource);
     ~CTableCellAnimationUp(void);
 
-    virtual void    UpdateForAnimation      (SDL_Surface* pSurface);
+    virtual void    UpdateForAnimation      ();
 };

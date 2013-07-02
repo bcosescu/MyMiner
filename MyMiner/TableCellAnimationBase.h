@@ -17,12 +17,15 @@ public:
     CTableCellAnimationBase(int nStartX, int nStartY, CGemsResources::eGemResource resource);
     virtual ~CTableCellAnimationBase(void);
 
-    bool            IsComplete          () const {return m_bComplete;}
+    bool            IsComplete                  () const {return m_bComplete;}
 
-    bool            Render              (SDL_Surface* pSurface);
-    void            AddPendingAnimations(const AnimationsList& pendingAnimations) {m_PendingAnimations = pendingAnimations;}
-    virtual void    UpdateForAnimation  (SDL_Surface* pSurface) {}
-    virtual bool    ContinueRendering   ();
+    bool            Render                      (SDL_Surface* pSurface);
+
+    void            AddPendingAnimations        (const AnimationsList& pendingAnimations) {m_PendingAnimations = pendingAnimations;}
+    void            CleanPendingAnimations      ();
+    virtual void    UpdateForAnimation          () {}
+    virtual bool    ContinueRendering           ();
+    virtual void    RenderImage                 (SDL_Surface* pImage, SDL_Surface* pSurface);
 
     CGemsResources::eGemResource   GetResource         () const {return m_resource;}
 

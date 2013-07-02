@@ -156,9 +156,9 @@ CTableBoard::TableCells CTableBoard::CollapseColumns(TableCells arrEmptyCells)
     for(size_t i = 0; i < arrEmptyColumns.size(); i++)
     {
         TableCells arrEmptyColumn = arrEmptyColumns[i];
-        for(size_t j = 0; j < arrEmptyColumn.size();j++)
+        for(TableCells::iterator it = arrEmptyColumn.begin(); it != arrEmptyColumn.end();it++)
         {
-            CTableCell* pCell = arrEmptyColumn[j];
+            CTableCell* pCell = *it;
 
             TableCells arrNonEmptyCells;
             //Move empty cell up
@@ -176,7 +176,11 @@ CTableBoard::TableCells CTableBoard::CollapseColumns(TableCells arrEmptyCells)
             }
 
             if(m_pNotifier)
-                m_pNotifier->ColumnCollapsed(arrEmptyColumn, arrNonEmptyCells);
+            {
+                TableCells arrEmptyCells;
+                std::copy(it, arrEmptyColumn.end(), std::back_inserter(arrEmptyCells));
+                m_pNotifier->ColumnCollapsed(arrEmptyCells, arrNonEmptyCells);
+            }
         }
     }
 
@@ -185,7 +189,7 @@ CTableBoard::TableCells CTableBoard::CollapseColumns(TableCells arrEmptyCells)
 }
 
 //Search for the same marker in the specified direction
-void CTableBoard::SearchForMarker(eSearchDirection eDirection, CTableCell* pCell, int nMarker, std::vector<CTableCell*>& arrCells)
+void CTableBoard::SearchForMarker(eSearchDirection eDirection, CTableCell* pCell, int nMarker, TableCells& arrCells)
 {
     if(!pCell || nMarker == 0 || nMarker > MAX_CELL_MARKER)
         return;
@@ -298,7 +302,7 @@ void CTableBoard::IdentifyLargestCellCount(CTableCell* pCell, TableCells& arrCel
     }
 }
 
-//Given a certain empty cell fill all neghibours
+//Given a certain empty cell fill all neighbors
 void CTableBoard::FillWithRandomMarker(CTableCell* pCell)
 {
     if(!pCell || !pCell->IsEmpty())
