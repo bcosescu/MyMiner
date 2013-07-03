@@ -213,3 +213,12 @@ void CTableCellRender::LinkRenders(TableCellRenders cellsRenders)
 
     m_animations.push_back(spAnimation);
 }
+
+void CTableCellRender::PrintAnimations()
+{
+    std::cout << "CTableCellRender: " << this << "\n";
+    for(AnimationsList::iterator it = m_animations.begin(); it != m_animations.end(); it++)
+    {
+        (*it)->PrintAnimations(1);
+    }
+}

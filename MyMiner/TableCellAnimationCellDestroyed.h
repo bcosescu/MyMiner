@@ -10,6 +10,7 @@ public:
     virtual void    UpdateForAnimation      ();
     virtual void    RenderImage             (SDL_Surface* pImage, SDL_Surface* pSurface);
 
+    virtual void    PrintAnimations             (int nIdent);
 
 private:
 

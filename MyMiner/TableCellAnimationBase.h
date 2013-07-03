@@ -4,7 +4,7 @@
 #include <list>
 #include "smart_ptr.h"
 
-#define SPEED_ANIMATION 3
+#define SPEED_ANIMATION 1
 
 class CTableCellAnimationBase;
 
@@ -30,6 +30,9 @@ public:
     virtual void    RenderImage                 (SDL_Surface* pImage, SDL_Surface* pSurface);
 
     CGemsResources::eGemResource   GetResource         () const {return m_resource;}
+
+    virtual void    PrintAnimations             (int nIdent);
+    void            PrintIdent                  (int nIdent);
 
 protected:
 

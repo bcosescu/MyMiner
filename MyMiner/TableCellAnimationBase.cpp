@@ -1,6 +1,7 @@
 #include "TableCellAnimationBase.h"
 #include "SDL.h"
 #include "Defines.h"
+#include <iostream>
 
 CTableCellAnimationBase::CTableCellAnimationBase(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 {
@@ -79,4 +80,22 @@ bool CTableCellAnimationBase::CanDraw()
         return true;
 
     return false;
+}
+
+void CTableCellAnimationBase::PrintAnimations(int nIdent)
+{
+    PrintIdent(nIdent);
+    std::cout << "Pending animations " << m_PendingAnimations.size() << " object " << this << "\n";
+    for(AnimationsList::iterator it = m_PendingAnimations.begin(); it != m_PendingAnimations.end(); it++)
+    {
+        (*it)->PrintAnimations(nIdent + 1);
+    }
+}
+
+void CTableCellAnimationBase::PrintIdent(int nIdent)
+{
+    for(int i = 0; i < nIdent * 3; i++)
+    {
+        std::cout << "-";
+    }
 }

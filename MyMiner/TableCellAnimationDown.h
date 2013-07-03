@@ -10,5 +10,9 @@ public:
     ~CTableCellAnimationDown(void);
 
     virtual void    UpdateForAnimation      ();
+
+    virtual void    PrintAnimations             (int nIdent);
+
+    static int nCount;
 };
 

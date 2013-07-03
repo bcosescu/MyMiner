@@ -12,6 +12,7 @@ public:
     virtual void    CellMovesUp         (CTableCell*) = 0;
     virtual void    CellMovesDown       (CTableCell*) = 0;
     virtual void    CellDestroyed       (CTableCell*) = 0;
+    virtual void    PrintAnimations     () = 0;
 };
 
 class ITableBoardNotifier

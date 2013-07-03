@@ -22,3 +22,10 @@ void CTableCellAnimationLeft::UpdateForAnimation()
     else
         m_nX -= SPEED_ANIMATION;
 }
+
+void CTableCellAnimationLeft::PrintAnimations(int nIdent)
+{
+    PrintIdent(nIdent);
+    std::cout << "CTableCellAnimationLeft\n";
+    CTableCellAnimationBase::PrintAnimations(nIdent);
+}

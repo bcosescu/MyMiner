@@ -1,7 +1,10 @@
 #include "TableCellRenderFake.h"
+#include "TableCellAnimationDrop.h"
+#include "TableCell.h"
+#include "TableBoardRender.h"
 
-CTableCellRenderFake::CTableCellRenderFake(CTableBoardRender* pBoard, Uint16 nX, Uint16 nY)
-: CTableCellRender(pBoard, nX, nY, NULL)
+CTableCellRenderFake::CTableCellRenderFake(CTableBoardRender* pBoard, Uint16 nX, Uint16 nY, CTableCell* pCell)
+: CTableCellRender(pBoard, nX, nY, pCell)
 {
 }
 
@@ -25,4 +28,12 @@ bool CTableCellRenderFake::Render(SDL_Surface* pSurface)
     }
 
     return true;
+}
+
+void CTableCellRenderFake::CellMovesDown(CTableCell* pCell)
+{
+    if(pCell->IsEmpty())
+        return;
+
+    CreateAnimation<CTableCellAnimationDrop>();
 }

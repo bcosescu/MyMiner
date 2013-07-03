@@ -30,12 +30,15 @@ public:
     void            GetAnimations   (AnimationsList&  animations) {animations = m_animations;}
     void            LinkRenders     (TableCellRenders cellsRenders);
 
+    // ICellChangesNotifier
     void            CellMovesRight  (CTableCell*);
     void            CellMovesLeft   (CTableCell*);
     void            CellMovesUp     (CTableCell*);
     void            CellMovesDown   (CTableCell*);
     void            CellDestroyed   (CTableCell*);
     void            CellWillBeEmpty (CTableCell*);
+
+    void            PrintAnimations ();
 
 protected:
 

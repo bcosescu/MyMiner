@@ -10,4 +10,5 @@ public:
     ~CTableCellAnimationRight(void);
 
     virtual void    UpdateForAnimation      ();
+    virtual void    PrintAnimations             (int nIdent);
 };

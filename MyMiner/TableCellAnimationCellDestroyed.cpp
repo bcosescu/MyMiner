@@ -38,3 +38,10 @@ void CTableCellAnimationCellDestroyed::RenderImage(SDL_Surface* pImage, SDL_Surf
     SDL_FillRect(pSurface, &rc, CELL_DESTROY_COLOR);
     CTableCellAnimationBase::RenderImage(pImage, pSurface);
 }
+
+void CTableCellAnimationCellDestroyed::PrintAnimations(int nIdent)
+{
+    PrintIdent(nIdent);
+    std::cout << "CTableCellAnimationCellDestroyed\n";
+    CTableCellAnimationBase::PrintAnimations(nIdent);
+}

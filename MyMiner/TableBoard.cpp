@@ -41,6 +41,16 @@ CTableBoard::CTableBoard(void)
         m_arrTable.push_back(arrRow);
     }
 
+    //Create a fake row cell
+    m_FakeCellRow.push_back(new CTableCell());
+    for(size_t i = 1; i < TABLESIZE; i++)
+    {
+        CTableCell* pCell = new CTableCell();
+        pCell->SetCellLeft(m_FakeCellRow[i - 1]);
+        m_FakeCellRow[i - 1]->SetCellRight(pCell);
+        m_FakeCellRow.push_back(pCell);
+    }
+
     //Create links
     for(size_t i = 0; i < TABLESIZE; i++)
     {
@@ -65,6 +75,12 @@ CTableBoard::~CTableBoard(void)
             CTableCell* pCell = arrRow[j];
             delete pCell;
         }
+    }
+
+    for(size_t i = 0; i < m_FakeCellRow.size(); i++)
+    {
+        CTableCell* pCell = m_FakeCellRow[i];
+        delete pCell;
     }
 }
 
@@ -360,32 +376,60 @@ void CTableBoard::FillWithRandomMarker()
 
         //Create extra cells that we link to the cells in tableboard and the we delete them
         TableCells extraCells;
-        for(size_t ii = 0; ii < filledCollumn.size(); ii++)
+        for(size_t ii = 0; ii < filledCollumn.size() - 1; ii++)
         {
             CTableCell* pCell = new CTableCell(filledCollumn[ii]->GetMarker());
-            extraCells.push_back(pCell);
-
-            pCell->SetCellUp(ii == 0? NULL : extraCells[ii - 1]);
+            pCell->SetCellUp(extraCells.size() == 0 ? NULL : extraCells.back());
             pCell->SetCellDown(NULL);
             pCell->SetCellLeft(NULL);
             pCell->SetCellRight(NULL);
 
-            if(ii != 0)
-                extraCells[ii - 1]->SetCellDown(pCell);
+            if(extraCells.size())
+                extraCells.back()->SetCellDown(pCell);
 
+            extraCells.push_back(pCell);
             filledCollumn[ii]->SetMarker(0);
         }
 
-        m_arrTable[0][j]->SetCellUp(extraCells.back());
-        extraCells.back()->SetCellDown(m_arrTable[0][j]);
+        //Copy first filledColumn in our fake cell
+        m_FakeCellRow[j]->SetMarker(filledCollumn.back()->GetMarker());
+        filledCollumn.back()->SetMarker(0);
+
+        //Link fake cell with the above cells
+        if(extraCells.size())
+        {
+            m_FakeCellRow[j]->SetCellUp(extraCells.back());
+            extraCells.back()->SetCellDown(m_FakeCellRow[j]);
+        }
+
+        //Link fake cell with the actual tableboard
+        m_arrTable[0][j]->SetCellUp(m_FakeCellRow[j]);
+        m_FakeCellRow[j]->SetCellDown(m_arrTable[0][j]);
 
         CollapseColumn(filledCollumn);
-
+        
         //Delete links
-        m_arrTable[0][j]->SetCellUp(NULL);
         for(size_t ii = 0; ii < extraCells.size(); ii++)
         {
             delete extraCells[ii];
+        }
+
+        //Cleanup links
+        m_arrTable[0][j]->SetCellUp(NULL);
+        m_FakeCellRow[j]->SetCellUp(NULL);
+        m_FakeCellRow[j]->SetCellDown(NULL);
+        m_FakeCellRow[j]->ResetMarker();
+
+        std::cout << "Column " << j << " animations:\n";
+        for(int ii = 0; ii < TABLESIZE; ii++)
+        {
+            if(m_arrTable[ii][j]->GetNotifier())
+                m_arrTable[ii][j]->GetNotifier()->PrintAnimations();
+
+            if(m_arrTable[0][0]->GetNotifier())
+            {
+                int n = 0;
+            }
         }
     }
 }

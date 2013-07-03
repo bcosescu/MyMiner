@@ -194,7 +194,7 @@ void CTableBoardRender::GenerateCellRenders()
     //Create a first row of fake renders, useful for placing resources that enter the tableboard
     for(int i = 0; i < TABLESIZE; i++)
     {
-        CTableCellRenderFake* pCellRender = new CTableCellRenderFake(this, m_rcMineEntrance.x + i * CELL_RENDER_SIZE, m_rcMineEntrance.y - CELL_RENDER_SIZE);
+        CTableCellRenderFake* pCellRender = new CTableCellRenderFake(this, m_rcMineEntrance.x + i * CELL_RENDER_SIZE, m_rcMineEntrance.y - CELL_RENDER_SIZE, m_TableBoard.GetFakeCell(i));
         m_CellsRender.push_back(pCellRender);
     }
 

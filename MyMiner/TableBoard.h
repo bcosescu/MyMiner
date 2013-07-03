@@ -20,7 +20,8 @@ public:
     CTableBoard(void);
     ~CTableBoard(void);
 
-    CTableCell* GetCell                 (int i, int j) { return m_arrTable[i][j];}
+    CTableCell* GetCell                 (int i, int j) { return m_arrTable[i][j]; }
+    CTableCell* GetFakeCell             (int i) { return m_FakeCellRow[i]; }
     void        FillWithRandomMarker    ();
 
     bool        CanCollapse             (CTableCell* pCell);
@@ -47,6 +48,7 @@ private:
 private:
 
     //main table
+    TableRow                m_FakeCellRow;
     TableBoard              m_arrTable;
     ITableBoardNotifier*    m_pNotifier;
 };

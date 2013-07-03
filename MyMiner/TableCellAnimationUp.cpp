@@ -22,3 +22,11 @@ void CTableCellAnimationUp::UpdateForAnimation()
     else
         m_nY -= SPEED_ANIMATION;
 }
+
+
+void CTableCellAnimationUp::PrintAnimations(int nIdent)
+{
+    PrintIdent(nIdent);
+    std::cout << "CTableCellAnimationUp\n";
+    CTableCellAnimationBase::PrintAnimations(nIdent);
+}

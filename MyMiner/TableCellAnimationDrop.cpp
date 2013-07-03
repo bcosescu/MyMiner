@@ -51,3 +51,10 @@ void CTableCellAnimationDrop::RenderImage(SDL_Surface* pImage, SDL_Surface* pSur
 
     SDL_BlitSurface(pImage, &imgRect, pSurface, &surfaceRect);
 }
+
+void CTableCellAnimationDrop::PrintAnimations(int nIdent)
+{
+    PrintIdent(nIdent);
+    std::cout << "CTableCellAnimationDrop\n";
+    CTableCellAnimationBase::PrintAnimations(nIdent);
+}

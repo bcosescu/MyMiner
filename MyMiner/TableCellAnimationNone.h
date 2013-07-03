@@ -11,4 +11,7 @@ public:
 
     virtual void    UpdateForAnimation      ();
     virtual bool    ContinueRendering       () {return true;}
+    virtual void    PrintAnimations             (int nIdent);
+
+    static int nCount;
 };
