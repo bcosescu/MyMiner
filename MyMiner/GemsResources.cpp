@@ -7,6 +7,7 @@ CGemsResources::CGemsResources(void)
 {
 }
 
+//Initialize
 bool CGemsResources::Initialize()
 {
     if(!LoadImg(eGMYellow, "./Resources/Yellow.png"))
@@ -27,6 +28,7 @@ bool CGemsResources::Initialize()
     return true;
 }
 
+//Unintialize
 bool CGemsResources::UnInitialize()
 {
 
@@ -37,6 +39,7 @@ bool CGemsResources::UnInitialize()
     return true;
 }
 
+//Retrieve SDL resource
 SDL_Surface* CGemsResources::ResourceFor(CGemsResources::eGemResource resource)
 {
     MAPRESOURCES::iterator it = m_mapImgResources.find(resource);
@@ -46,6 +49,7 @@ SDL_Surface* CGemsResources::ResourceFor(CGemsResources::eGemResource resource)
     return it->second;
 }
 
+//Load an image - helper
 bool CGemsResources::LoadImg(eGemResource resource, const char* strImgPath)
 {
     SDL_Surface* pImgTmp = NULL;

@@ -1,7 +1,6 @@
 #include "TableCellAnimationCellDestroyed.h"
 #include "Defines.h"
 #include "SDL.h"
-#include <iostream>
 
 CTableCellAnimationCellDestroyed::CTableCellAnimationCellDestroyed(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 : CTableCellAnimationBase(nStartX, nStartY, resource)
@@ -11,9 +10,9 @@ CTableCellAnimationCellDestroyed::CTableCellAnimationCellDestroyed(int nStartX, 
 
 CTableCellAnimationCellDestroyed::~CTableCellAnimationCellDestroyed(void)
 {
-    std::cout << "~CTableCellAnimationCellDestroyed\n";
 }
 
+//This animations will present the same thing for 20 times
 void CTableCellAnimationCellDestroyed::UpdateForAnimation()
 {
     if(!CanDraw())
@@ -28,8 +27,10 @@ void CTableCellAnimationCellDestroyed::UpdateForAnimation()
         m_nKeepCounter++;
 }
 
+//Render animation
 void CTableCellAnimationCellDestroyed::RenderImage(SDL_Surface* pImage, SDL_Surface* pSurface)
 {
+    //Draw a rectangle to mark the cell is beeing destroyed and apply image
     SDL_Rect rc;
     rc.x = m_nX;
     rc.y = m_nY;
@@ -37,11 +38,4 @@ void CTableCellAnimationCellDestroyed::RenderImage(SDL_Surface* pImage, SDL_Surf
     rc.h = CELL_RENDER_SIZE;
     SDL_FillRect(pSurface, &rc, CELL_DESTROY_COLOR);
     CTableCellAnimationBase::RenderImage(pImage, pSurface);
-}
-
-void CTableCellAnimationCellDestroyed::PrintAnimations(int nIdent)
-{
-    PrintIdent(nIdent);
-    std::cout << "CTableCellAnimationCellDestroyed\n";
-    CTableCellAnimationBase::PrintAnimations(nIdent);
 }

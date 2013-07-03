@@ -3,6 +3,7 @@
 
 class CTableCell;
 
+//Notifications from a cell
 class ICellChangesNotifier
 {
 public:
@@ -12,9 +13,9 @@ public:
     virtual void    CellMovesUp         (CTableCell*) = 0;
     virtual void    CellMovesDown       (CTableCell*) = 0;
     virtual void    CellDestroyed       (CTableCell*) = 0;
-    virtual void    PrintAnimations     () = 0;
 };
 
+//Notifications from table board
 class ITableBoardNotifier
 {
 public:

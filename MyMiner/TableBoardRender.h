@@ -1,3 +1,4 @@
+// Table board render - holds an array of cell renders 
 #pragma once
 
 #include "SDL_image.h"
@@ -26,6 +27,8 @@ public:
     bool                PendingScenes           (AnimationsList& listPendingAnimations);
     bool                LastScenes              (AnimationsList& listLastAnimations);
     void                NewAnimationCreated     (CTableCellAnimationBasePtr spAnimation) {m_LastAnimations.push_back(spAnimation);}
+
+    //ITableBoardNotifier
     void                CellsToBeDestroyed      (std::vector<CTableCell*> arrCells);
     void                CellsDestroyed          (std::vector<CTableCell*> arrCells);
     void                ColumnCollapsed         (std::vector<CTableCell*> arrEmptyCells, std::vector<CTableCell*> arrCollapsedCells);
@@ -38,13 +41,13 @@ private:
     void                SelectCell              (CTableCellRender* pRenderCell);
     TableCellRenders    GetRenders              (std::vector<CTableCell*> arrCells);
 
-    CTableBoard&        m_TableBoard;
-    SDL_Surface*        m_pBackGroundImg;
-    SDL_Rect            m_rcMineEntrance;
-    CTableCellRender*   m_pSelectedCell;
+    CTableBoard&        m_TableBoard;           //tabla board object
+    SDL_Surface*        m_pBackGroundImg;       //background image for the table
+    SDL_Rect            m_rcMineEntrance;       //location of the table
+    CTableCellRender*   m_pSelectedCell;        //current selected cell
 
-    TableCellRenders    m_CellsRender;
-    AnimationsList      m_PendingAnimations;
-    AnimationsList      m_LastAnimations;
-    TableCellRenders    m_LastCellsDestroyed;
+    TableCellRenders    m_CellsRender;          //cells to be rendered
+    AnimationsList      m_PendingAnimations;    //animations that should be drawn first
+    AnimationsList      m_LastAnimations;       //latest animations created
+    TableCellRenders    m_LastCellsDestroyed;   //latest renders for destroyed cells
 };

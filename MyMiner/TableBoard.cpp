@@ -8,6 +8,7 @@
 #include <conio.h>
 #include "CellChangesInterface.h"
 
+//helpers to move from std::map to std::vector
 template<typename tPair>
 struct second_t 
 { 
@@ -20,6 +21,7 @@ second_t<typename tMap::value_type> second(const tMap& m)
     return second_t<typename tMap::value_type>(); 
 }
 
+//helper function clear a cell
 void EmptyCell(CTableCell* pCell)
 {
     pCell->ResetMarker();
@@ -178,6 +180,7 @@ CTableBoard::TableCells CTableBoard::MoveCellsDown(TableCells arrEmptyCells)
     return newEmptyCells;
 }
 
+//Collapse column on the empty cells 
 CTableBoard::TableCells CTableBoard::CollapseColumn(TableCells arrEmptyColumn)
 {
     TableCells newEmptyCells;
@@ -248,7 +251,6 @@ void CTableBoard::SearchForMarker(eSearchDirection eDirection, CTableCell* pCell
 //Search the whole table board for matching lines and columns
 void CTableBoard::MatchTableBoard()
 {
-    static int n = 0;
     while(1)
     {
         bool bCollapsedColumns = false;
@@ -278,14 +280,8 @@ void CTableBoard::MatchTableBoard()
                     if(m_pNotifier)
                         m_pNotifier->CellsDestroyed(arrCells);
 
-                    std::cout << "MatchTableBoard pass:" << n++ << "\n";
-                    PrintTableBoard();
-
                     bCollapsedColumns = true;
                     MoveCellsDown(arrCells);
-
-                    std::cout << "After collapse:\n";
-                    PrintTableBoard();
                 }
             }
         }
@@ -419,18 +415,6 @@ void CTableBoard::FillWithRandomMarker()
         m_FakeCellRow[j]->SetCellUp(NULL);
         m_FakeCellRow[j]->SetCellDown(NULL);
         m_FakeCellRow[j]->ResetMarker();
-
-        std::cout << "Column " << j << " animations:\n";
-        for(int ii = 0; ii < TABLESIZE; ii++)
-        {
-            if(m_arrTable[ii][j]->GetNotifier())
-                m_arrTable[ii][j]->GetNotifier()->PrintAnimations();
-
-            if(m_arrTable[0][0]->GetNotifier())
-            {
-                int n = 0;
-            }
-        }
     }
 }
 
@@ -446,7 +430,7 @@ void CTableBoard::ClearTableBoard()
     }
 }
 
-//Fill cell with predefine markers
+//Fill cell with predefine markers - helper
 bool CTableBoard::LoadFromTemplate(const char* strTemplate)
 {
     struct tokens: std::ctype<char> 

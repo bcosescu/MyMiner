@@ -1,3 +1,5 @@
+//Animate a cell moving up with the size of render cell
+
 #pragma once
 
 #include "TableCellAnimationBase.h"
@@ -10,5 +12,4 @@ public:
     ~CTableCellAnimationUp(void);
 
     virtual void    UpdateForAnimation      ();
-    virtual void    PrintAnimations             (int nIdent);
 };

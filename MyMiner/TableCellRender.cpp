@@ -11,6 +11,7 @@
 #include "TableCellAnimationNone.h"
 #include "TableBoardRender.h"
 
+//specialize for CTableCellAnimationNone
 template<>
 void CTableCellRender::CreateAnimation<CTableCellAnimationNone>()
 {
@@ -40,12 +41,13 @@ CTableCellRender::~CTableCellRender(void)
 {
 }
 
+//Render the cell on screen
 bool CTableCellRender::Render(SDL_Surface* pSurface)
 {
     if(!m_pCell)
         return false;
 
-    //Render pending animations
+    //Render pending animations first
     if(m_animations.size())
     {
         CTableCellAnimationBasePtr spCurrentAnimation = m_animations.front();
@@ -65,7 +67,7 @@ bool CTableCellRender::Render(SDL_Surface* pSurface)
     if(!pImage)
         return false;
 
-    //Draw static image
+    //Draw static image if no animation
 
     RenderSelected(pSurface);
 
@@ -84,6 +86,7 @@ bool CTableCellRender::Render(SDL_Surface* pSurface)
     return true;
 }
 
+//If selected draw a special rectangle to mark it as selected
 void CTableCellRender::RenderSelected(SDL_Surface* pSurface)
 {
     if(!m_bSelected)
@@ -115,11 +118,13 @@ void CTableCellRender::RenderSelected(SDL_Surface* pSurface)
     SDL_FillRect(pSurface, &rc, CELL_SELECTED_COLOR);
 }
 
+//helper function
 bool CTableCellRender::PointInCell(Uint16 nX, Uint16 nY) const
 {
     return (nX >= m_nX) && (nX < m_nX + CELL_RENDER_SIZE) && (nY >= m_nY) && (nY < m_nY + CELL_RENDER_SIZE);
 }
 
+//switch with another render - only the value is swaped
 bool CTableCellRender::TryToSwap(CTableCellRender* pCellRender)
 {
     if(!m_pCell)
@@ -132,6 +137,7 @@ bool CTableCellRender::TryToSwap(CTableCellRender* pCellRender)
     return m_pCell->Swap(pTheOtherCell);
 }
 
+//notification from the cell that a move to the right is place
 void CTableCellRender::CellMovesRight(CTableCell* pCell)
 {
     if(pCell->IsEmpty())
@@ -141,9 +147,9 @@ void CTableCellRender::CellMovesRight(CTableCell* pCell)
 
     AnimationsList priorAnimations;
     m_pTableBoardRender->PendingScenes(priorAnimations);
-    std::cout << "Cell moves RIGHT with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
 }
 
+//notification from the cell that a move to the left is place
 void CTableCellRender::CellMovesLeft(CTableCell* pCell)
 {
     if(pCell->IsEmpty())
@@ -153,9 +159,9 @@ void CTableCellRender::CellMovesLeft(CTableCell* pCell)
 
     AnimationsList priorAnimations;
     m_pTableBoardRender->PendingScenes(priorAnimations);
-    std::cout << "Cell moves LEFT  with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";    
 }
 
+//notification from the cell that a move up is place
 void CTableCellRender::CellMovesUp(CTableCell* pCell)
 {
     if(pCell->IsEmpty())
@@ -165,9 +171,9 @@ void CTableCellRender::CellMovesUp(CTableCell* pCell)
 
     AnimationsList priorAnimations;
     m_pTableBoardRender->PendingScenes(priorAnimations);
-    std::cout << "Cell moves UP    with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";    
 }
 
+//notification from the cell that a move down is place
 void CTableCellRender::CellMovesDown(CTableCell* pCell)
 {
     if(pCell->IsEmpty())
@@ -177,9 +183,9 @@ void CTableCellRender::CellMovesDown(CTableCell* pCell)
 
     AnimationsList priorAnimations;
     m_pTableBoardRender->PendingScenes(priorAnimations);
-    std::cout << "Cell moves DOWN  with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
 }
 
+//notification from the cell that is being destroyed
 void CTableCellRender::CellDestroyed(CTableCell* pCell)
 {
     if(pCell->IsEmpty())
@@ -189,18 +195,9 @@ void CTableCellRender::CellDestroyed(CTableCell* pCell)
 
     AnimationsList priorAnimations;
     m_pTableBoardRender->PendingScenes(priorAnimations);
-    std::cout << "Cell DESTROYED with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
 }
 
-void CTableCellRender::CellWillBeEmpty(CTableCell* pCell)
-{
-    CreateAnimation<CTableCellAnimationNone>();
-
-    AnimationsList priorAnimations;
-    m_pTableBoardRender->LastScenes(priorAnimations);
-    std::cout << "Cell NONE       with pending animations = " << priorAnimations.size() << " marker = " << pCell->GetMarker() << "\n";
-}
-
+//link animations between renders
 void CTableCellRender::LinkRenders(TableCellRenders cellsRenders)
 {
     CTableCellAnimationBasePtr spAnimation(new CTableCellAnimationNone());
@@ -212,13 +209,4 @@ void CTableCellRender::LinkRenders(TableCellRenders cellsRenders)
     }
 
     m_animations.push_back(spAnimation);
-}
-
-void CTableCellRender::PrintAnimations()
-{
-    std::cout << "CTableCellRender: " << this << "\n";
-    for(AnimationsList::iterator it = m_animations.begin(); it != m_animations.end(); it++)
-    {
-        (*it)->PrintAnimations(1);
-    }
 }

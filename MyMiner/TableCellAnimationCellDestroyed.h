@@ -1,3 +1,5 @@
+//Animate a cell being destroyed - draw a filled rectangle and the resource
+
 #pragma once
 #include "TableCellAnimationBase.h"
 
@@ -10,9 +12,7 @@ public:
     virtual void    UpdateForAnimation      ();
     virtual void    RenderImage             (SDL_Surface* pImage, SDL_Surface* pSurface);
 
-    virtual void    PrintAnimations             (int nIdent);
-
 private:
-
-    int     m_nKeepCounter;
+    
+    int             m_nKeepCounter;         // number of times to draw the animations   
 };

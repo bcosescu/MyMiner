@@ -1,8 +1,9 @@
+// Table cell render
+
 #pragma once
 #include "SDL.h"
 #include "CellChangesInterface.h"
 #include "TableCellAnimationBase.h"
-#include <iostream>
 
 class CTableCell;
 class CTableBoardRender;
@@ -36,32 +37,32 @@ public:
     void            CellMovesUp     (CTableCell*);
     void            CellMovesDown   (CTableCell*);
     void            CellDestroyed   (CTableCell*);
-    void            CellWillBeEmpty (CTableCell*);
-
-    void            PrintAnimations ();
 
 protected:
 
     void            RenderSelected  (SDL_Surface* pSurface);
 
+    // Helper function to create an animation
     template<class T>
     void            CreateAnimation()
     {
         CTableCellAnimationBasePtr spAnimation(new T(m_nX, m_nY, (CGemsResources::eGemResource)m_pCell->GetMarker()));
     
+        //if there are pending animations add them to this one
         AnimationsList priorAnimations;
         if(m_pTableBoardRender->PendingScenes(priorAnimations))
             spAnimation->AddPendingAnimations(priorAnimations);
 
+        //notify table render that an animation was created
         m_pTableBoardRender->NewAnimationCreated(spAnimation);
         m_animations.push_back(spAnimation);
     }
 
-    CTableBoardRender*  m_pTableBoardRender;
-    Uint16              m_nX;
-    Uint16              m_nY;
-    bool                m_bSelected;
-    CTableCell*         m_pCell;
-    AnimationsList      m_animations;
+    CTableBoardRender*  m_pTableBoardRender;        //table render
+    Uint16              m_nX;                       //x-coordinate to position render
+    Uint16              m_nY;                       //y-coordinate to position render
+    bool                m_bSelected;                //selected or not
+    CTableCell*         m_pCell;                    //matching cell in table
+    AnimationsList      m_animations;               //animations to draw on render
 
 };

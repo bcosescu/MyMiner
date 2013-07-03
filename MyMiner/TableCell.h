@@ -1,3 +1,5 @@
+// Table cell object
+
 #pragma once
 
 class ICellChangesNotifier;
@@ -33,10 +35,10 @@ public:
 
 private:
 
-    ICellChangesNotifier*   m_pNotifier;
-    CTableCell*             m_pCellUp;
+    ICellChangesNotifier*   m_pNotifier;    //notification object
+    CTableCell*             m_pCellUp;      //neighbors
     CTableCell*             m_pCellDown;
     CTableCell*             m_pCellLeft;
     CTableCell*             m_pCellRight;
-    int                     m_nMarker;
+    int                     m_nMarker;      //value of the cell
 };

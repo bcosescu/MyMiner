@@ -1,16 +1,16 @@
+// Base class for all animations
+
 #pragma once
 #include "GemsResources.h"
 #include <vector>
 #include <list>
 #include "smart_ptr.h"
 
-#define SPEED_ANIMATION 1
-
 class CTableCellAnimationBase;
 
-typedef smart_ptr::strong_ptr<CTableCellAnimationBase> CTableCellAnimationBasePtr;
-typedef std::list<CTableCellAnimationBasePtr>   AnimationsList;
-typedef std::vector<CTableCellAnimationBasePtr> AnimationsVector;
+typedef smart_ptr::strong_ptr<CTableCellAnimationBase>  CTableCellAnimationBasePtr;
+typedef std::list<CTableCellAnimationBasePtr>           AnimationsList;
+typedef std::vector<CTableCellAnimationBasePtr>         AnimationsVector;
 
 class CTableCellAnimationBase
 {
@@ -20,31 +20,30 @@ public:
     virtual ~CTableCellAnimationBase(void);
 
     bool            IsComplete                  () const {return m_bComplete;}
+    CGemsResources::eGemResource   
+                    GetResource                 () const {return m_resource;}
 
     bool            Render                      (SDL_Surface* pSurface);
 
     void            AddPendingAnimations        (const AnimationsList& pendingAnimations) {m_PendingAnimations = pendingAnimations;}
     void            CleanPendingAnimations      ();
+
+    //overrides
     virtual void    UpdateForAnimation          () {}
     virtual bool    ContinueRendering           ();
     virtual void    RenderImage                 (SDL_Surface* pImage, SDL_Surface* pSurface);
-
-    CGemsResources::eGemResource   GetResource         () const {return m_resource;}
-
-    virtual void    PrintAnimations             (int nIdent);
-    void            PrintIdent                  (int nIdent);
 
 protected:
 
     bool            CanDraw             ();
 
-    int                             m_nStartX;
-    int                             m_nStartY;
-    int                             m_nX;
-    int                             m_nY;
-    CGemsResources::eGemResource    m_resource;
-    bool                            m_bComplete;
-    AnimationsList                  m_PendingAnimations;
-    int                             m_nSlowDown;
+    int                             m_nStartX;      // x-coordinate for a starting animation
+    int                             m_nStartY;      // y-coordinate for a starting animation
+    int                             m_nX;           // x-coordinate current for animation
+    int                             m_nY;           // y-coordinate current for animation
+    CGemsResources::eGemResource    m_resource;     // resource to draw
+    bool                            m_bComplete;    // animation status
+    AnimationsList                  m_PendingAnimations; //don't start before these animations
+    int                             m_nSlowDown;    // slow down factor - helper
 
 };

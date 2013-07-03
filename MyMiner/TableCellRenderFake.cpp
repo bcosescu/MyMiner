@@ -30,6 +30,7 @@ bool CTableCellRenderFake::Render(SDL_Surface* pSurface)
     return true;
 }
 
+//Moving cell down means a drop animation
 void CTableCellRenderFake::CellMovesDown(CTableCell* pCell)
 {
     if(pCell->IsEmpty())

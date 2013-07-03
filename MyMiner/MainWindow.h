@@ -1,3 +1,4 @@
+// Main window for the game
 #pragma once
 #include "TableBoardRender.h"
 
@@ -16,8 +17,7 @@ private:
     bool                HandleKey       (const SDL_KeyboardEvent& keyEvent);
     bool                HandleMouse     (const SDL_MouseButtonEvent& mouseEvent);
 
-private:
 
-    SDL_Surface*        m_pWindow;
-    CTableBoardRender   m_TableBoardRender;
+    SDL_Surface*        m_pWindow;              //window object
+    CTableBoardRender   m_TableBoardRender;     //table render
 };

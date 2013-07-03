@@ -1,6 +1,5 @@
 #include "TableCellAnimationDrop.h"
 #include "Defines.h"
-#include <iostream>
 #include "SDL.h"
 #include <assert.h>
 #include <algorithm>
@@ -14,9 +13,9 @@ CTableCellAnimationDrop::CTableCellAnimationDrop(int nStartX, int nStartY, CGems
 
 CTableCellAnimationDrop::~CTableCellAnimationDrop(void)
 {
-    std::cout << "~CTableCellAnimationDrop\n";
 }
 
+//This animation will only draw a portion of resource on the top row of the table board 
 void CTableCellAnimationDrop::UpdateForAnimation()
 {
     if(!CanDraw())
@@ -32,6 +31,7 @@ void CTableCellAnimationDrop::UpdateForAnimation()
         m_nImgHeight++;
 }
 
+//Draw the image
 void CTableCellAnimationDrop::RenderImage(SDL_Surface* pImage, SDL_Surface* pSurface)
 {
     SDL_Rect imgRect;
@@ -50,11 +50,4 @@ void CTableCellAnimationDrop::RenderImage(SDL_Surface* pImage, SDL_Surface* pSur
     surfaceRect.h = pImage->h;
 
     SDL_BlitSurface(pImage, &imgRect, pSurface, &surfaceRect);
-}
-
-void CTableCellAnimationDrop::PrintAnimations(int nIdent)
-{
-    PrintIdent(nIdent);
-    std::cout << "CTableCellAnimationDrop\n";
-    CTableCellAnimationBase::PrintAnimations(nIdent);
 }

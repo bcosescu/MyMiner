@@ -1,3 +1,5 @@
+//Singleton for retriving SDL images
+
 #pragma once
 #include <map>
 

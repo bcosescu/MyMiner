@@ -1,3 +1,5 @@
+// Animate a cell from the top line beeing filled with a resource
+
 #pragma once
 
 #include "TableCellAnimationBase.h"
@@ -11,8 +13,7 @@ public:
 
     virtual void    UpdateForAnimation      ();
     virtual void    RenderImage             (SDL_Surface* pImage, SDL_Surface* pSurface);
-    virtual void    PrintAnimations             (int nIdent);
 
 protected:
-    int         m_nImgHeight;
+    int             m_nImgHeight;   //the height of the image that was drawn so far
 };

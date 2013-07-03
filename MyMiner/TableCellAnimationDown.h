@@ -1,3 +1,5 @@
+//Animate a cell moving down towards the neighbour
+
 #pragma once
 
 #include "TableCellAnimationBase.h"
@@ -10,9 +12,5 @@ public:
     ~CTableCellAnimationDown(void);
 
     virtual void    UpdateForAnimation      ();
-
-    virtual void    PrintAnimations             (int nIdent);
-
-    static int nCount;
 };
 

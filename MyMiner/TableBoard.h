@@ -1,3 +1,5 @@
+//Table board - main gaming logic
+
 #pragma once
 #include "TableCell.h"
 #include <vector>
@@ -48,7 +50,7 @@ private:
 private:
 
     //main table
-    TableRow                m_FakeCellRow;
-    TableBoard              m_arrTable;
-    ITableBoardNotifier*    m_pNotifier;
+    TableRow                m_FakeCellRow;  //fake row of cell to help with entering cells in screen
+    TableBoard              m_arrTable;     //table
+    ITableBoardNotifier*    m_pNotifier;    //notification object
 };

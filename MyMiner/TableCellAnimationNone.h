@@ -1,3 +1,5 @@
+//Animate a cell with an empty image
+
 #pragma once
 
 #include "TableCellAnimationBase.h"
@@ -11,7 +13,4 @@ public:
 
     virtual void    UpdateForAnimation      ();
     virtual bool    ContinueRendering       () {return true;}
-    virtual void    PrintAnimations             (int nIdent);
-
-    static int nCount;
 };

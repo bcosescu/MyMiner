@@ -1,3 +1,4 @@
+//Animate a cell moving right with size of the render cell
 #pragma once
 
 #include "TableCellAnimationBase.h"
@@ -10,5 +11,4 @@ public:
     ~CTableCellAnimationRight(void);
 
     virtual void    UpdateForAnimation      ();
-    virtual void    PrintAnimations             (int nIdent);
 };

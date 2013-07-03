@@ -1,6 +1,5 @@
 #include "TableCellAnimationUp.h"
 #include "Defines.h"
-#include <iostream>
 
 CTableCellAnimationUp::CTableCellAnimationUp(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 : CTableCellAnimationBase(nStartX, nStartY, resource)
@@ -9,7 +8,6 @@ CTableCellAnimationUp::CTableCellAnimationUp(int nStartX, int nStartY, CGemsReso
 
 CTableCellAnimationUp::~CTableCellAnimationUp(void)
 {
-    std::cout << "~CTableCellAnimationUp\n";
 }
 
 void CTableCellAnimationUp::UpdateForAnimation()
@@ -21,12 +19,4 @@ void CTableCellAnimationUp::UpdateForAnimation()
         m_bComplete = true;
     else
         m_nY -= SPEED_ANIMATION;
-}
-
-
-void CTableCellAnimationUp::PrintAnimations(int nIdent)
-{
-    PrintIdent(nIdent);
-    std::cout << "CTableCellAnimationUp\n";
-    CTableCellAnimationBase::PrintAnimations(nIdent);
 }

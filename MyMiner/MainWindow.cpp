@@ -28,6 +28,7 @@ bool CMainWindow::Initialize()
     return CGemsResources::GetInstance().Initialize();
 }
 
+//Uninitilize main window
 bool CMainWindow::UnInitialize()
 {
     return CGemsResources::GetInstance().UnInitialize();
@@ -72,7 +73,7 @@ bool CMainWindow::GameLoop()
             }
         }
 
-        
+        //Render the table board
         m_TableBoardRender.Render(m_pWindow);
         SDL_Flip(m_pWindow);
     }

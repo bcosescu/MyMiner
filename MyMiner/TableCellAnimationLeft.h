@@ -1,4 +1,7 @@
+// Animate a cell moving to the left with the size of the render
+
 #pragma once
+
 #include "TableCellAnimationBase.h"
 
 class CTableCellAnimationLeft : public CTableCellAnimationBase
@@ -9,5 +12,4 @@ public:
     ~CTableCellAnimationLeft(void);
 
     virtual void    UpdateForAnimation      ();
-    virtual void    PrintAnimations             (int nIdent);
 };

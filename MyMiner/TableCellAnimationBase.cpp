@@ -1,7 +1,6 @@
 #include "TableCellAnimationBase.h"
 #include "SDL.h"
 #include "Defines.h"
-#include <iostream>
 
 CTableCellAnimationBase::CTableCellAnimationBase(int nStartX, int nStartY, CGemsResources::eGemResource resource)
 {
@@ -18,23 +17,28 @@ CTableCellAnimationBase::~CTableCellAnimationBase(void)
 {
 }
 
+//Render animation on surface
 bool CTableCellAnimationBase::Render(SDL_Surface* pSurface)
 {
+    //Verify completion on pedin animations
     CleanPendingAnimations();
 
     if(!ContinueRendering())
         return false;
 
+    //Update any related information on animation
     UpdateForAnimation();
 
     SDL_Surface* pImage = CGemsResources::GetInstance().ResourceFor(m_resource);
     if(!pImage)
         return true;
 
+    //Draw the animation
     RenderImage(pImage, pSurface);
     return true;
 }
 
+//Remove complete animations from our list
 void CTableCellAnimationBase::CleanPendingAnimations()
 {
     AnimationsList::iterator it = m_PendingAnimations.begin();
@@ -53,11 +57,13 @@ void CTableCellAnimationBase::CleanPendingAnimations()
     }
 }
 
+//No rendering takes place if there are still pending animations to draw
 bool CTableCellAnimationBase::ContinueRendering()
 {
     return (m_PendingAnimations.size() == 0);
 }
 
+//Render image
 void CTableCellAnimationBase::RenderImage(SDL_Surface* pImage, SDL_Surface* pSurface)
 {
     Uint16 xOffset = (CELL_RENDER_SIZE - pImage->w) / 2;
@@ -72,6 +78,7 @@ void CTableCellAnimationBase::RenderImage(SDL_Surface* pImage, SDL_Surface* pSur
     SDL_BlitSurface(pImage, NULL, pSurface, &surfaceRect);
 }
 
+//Slow down function - helper
 bool CTableCellAnimationBase::CanDraw()
 {
     return true;
@@ -80,22 +87,4 @@ bool CTableCellAnimationBase::CanDraw()
         return true;
 
     return false;
-}
-
-void CTableCellAnimationBase::PrintAnimations(int nIdent)
-{
-    PrintIdent(nIdent);
-    std::cout << "Pending animations " << m_PendingAnimations.size() << " object " << this << "\n";
-    for(AnimationsList::iterator it = m_PendingAnimations.begin(); it != m_PendingAnimations.end(); it++)
-    {
-        (*it)->PrintAnimations(nIdent + 1);
-    }
-}
-
-void CTableCellAnimationBase::PrintIdent(int nIdent)
-{
-    for(int i = 0; i < nIdent * 3; i++)
-    {
-        std::cout << "-";
-    }
 }

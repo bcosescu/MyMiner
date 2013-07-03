@@ -1,3 +1,4 @@
+// Fake table render cell
 #pragma once
 #include "TableCellRender.h"
 
@@ -16,6 +17,5 @@ public:
     void            CellMovesUp     (CTableCell*) {}
     void            CellMovesDown   (CTableCell*);
     void            CellDestroyed   (CTableCell*) {}
-    void            CellWillBeEmpty (CTableCell*) {}
   
 };
